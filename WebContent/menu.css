@@ -1,0 +1,23 @@
+@charset "UTF-8";
+ul
+{
+list-style-type:none;
+margin:0;
+padding:0;
+overflow:hidden;
+}
+li
+{
+float:left;
+}
+input
+{
+display:block;
+width:120px;
+font-weight:bold;
+color:#FFFFFF;
+background-color:#ccccff;
+text-align:center;
+padding:4px;
+text-decoration:none;
+}
