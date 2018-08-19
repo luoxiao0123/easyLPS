@@ -1,5 +1,8 @@
 package com.lps.domain;
 
+import com.lps.exception.CellStrMismatchException;
+import com.lps.utils.CellUtils;
+
 public class Action extends Cell{
 	private boolean isModified;
 	private boolean isConclusion;
@@ -21,17 +24,17 @@ public class Action extends Cell{
 	}
 	
 	@Override
-	public String getInitPhrase() {
+	public String getInitPhrase() throws CellStrMismatchException {
 		StringBuffer sb = new StringBuffer();
-		sb.append("observe ").append(text).append(" from ");
+		sb.append("observe ").append(CellUtils.toStandardForm(text)).append(" from ");
 		sb.append(getStartTime()).append(" to ").append(getEndTime()).append(".");
 		return sb.toString();
 	}
 	
 	@Override
-	public String getPhrase() {
+	public String getPhrase() throws CellStrMismatchException {
 		StringBuffer sb = new StringBuffer();
-		sb.append(text).append(" from T").append(getStartTime())
+		sb.append(CellUtils.toStandardForm(text)).append(" from T").append(getStartTime())
 		.append(" to T").append(getEndTime());
 		return sb.toString();
 	}

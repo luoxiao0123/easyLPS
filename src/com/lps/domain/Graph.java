@@ -3,6 +3,9 @@ package com.lps.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.lps.exception.CellStrMismatchException;
+import com.lps.exception.NoConclusionException;
+import com.lps.exception.RevCausalException;
 import com.lps.utils.CellUtils;
 
 import net.sf.json.JSONArray;
@@ -56,5 +59,18 @@ public abstract class Graph {
 		return true;
 	}
 	
-	public abstract String toString();
+	public abstract String getString() throws 
+	CellStrMismatchException, NoConclusionException, RevCausalException;
+
+	public List<Action> getActions() {
+		return actions;
+	}
+
+	public List<Fluent> getFluents() {
+		return fluents;
+	}
+
+	public String getName() {
+		return name;
+	}
 }

@@ -22,18 +22,20 @@
     	<li><input type="button" onclick="insertText()" value="Insert Text"></li>
     	<li><input type="button" onclick="setAsConclusion()" value="Set As Conclusion"></li>
 	</ul>
-	<input type="text" id="myText" value="Undefined">
+	<input type="text" id="myText" value="Undefined" onkeyup="inputRestrict(this)">
+
 	<ul>
     	<li><input type="button" onclick="jsonStr()" value="Json String"></li>
     	<li><input type="button" onclick="getClause()" value="Get Clause"></li>
-  		<li><input type="button" onclick="alert('a')" value="Remove"></li>
+  		<li><input type="button" onclick="selectGraph()" value="Select Graph"></li>
     	<li><input type="button" onclick="alert('b')" value="Insert Text"></li>
 	</ul>
 	<p id="mode" ></p>
-	<ul id="storedGraph"></ul>
-	<div>
-		<textarea id="output" placeholder=""></textarea>
-	</div>
+	<ul id="storedGraph">
+		<li><input type="button" id="getCode" onclick="getFinalCode()" value="Process to Final Code" style="display:none"></li>
+		<li><input type="button" id="hideSelect" onclick="hideSelect()" value="Hide" style="display:none"></li>
+	</ul>
+	
     <div id="myholder"></div>
     
 
@@ -62,17 +64,24 @@
     				url : "ClauseServlet",
     				type : "post",
     				data : {
-    					"jsonObj": toJson(), 
+    					"jsonStr": toJson(), 
     					"graphType": global.graphType,
     					"graphName": global.currentGraphButton.getAttribute("graphname")
     				},
     				error : function(XMLHttpRequest, textStatus, errorThrown){ 
-    					alert("failure!");
+    					alert(XMLHttpRequest.responseText);
     				},
-    				success : function(output) {
-    					$("#output").val(output);
+    				success : function(data) {
+    					parent.frames["code"].document.getElementById('output').value = data;
     				}
     		});
+    	}
+    	
+    	function inputRestrict(obj) {
+    		var regex = obj.value.replace(/[^\a-\z\A-\Z0-9\(\)\,\_\ ]/g,'');
+    		if(obj.value != regex) {
+    			obj.value = regex;
+    		}
     	}
     </script>
     

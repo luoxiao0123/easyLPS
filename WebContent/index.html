@@ -1,5 +1,241 @@
 <!DOCTYPE html>
-<frameset cols="50%,50%">
-      <frame src="graph.html">
-      <frame src="code.html">
-</frameset>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Easy LPS</title>
+<link rel="stylesheet" type="text/css" href="js/joint.css" />
+<link rel="stylesheet" type="text/css" href="css/jquery.splitter.css" />
+<link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="code.css" />
+<link rel="stylesheet" type="text/css" href="dropdown.css" />
+</head>
+
+<body>
+	<div id="whole">
+		<div id="navbar">
+<!-- 			<ul>
+    			<li><input type="button" onclick="initialize()" value="Initialization"></li>
+    			<li><input type="button" onclick="reactiveRule()" value="ReactiveRule"></li>
+    			<li><input type="button" onclick="macroAction()" value="MacroAction"></li>
+    			<li><input type="button" onclick="save()" value="Save"></li>
+    			<li><input type="button" onclick="saveAs()" value="SaveAs"></li>
+    			<li><input type="button" onclick="newAction()" value="New Action"></li>
+    			<li><input type="button" onclick="newFluent()" value="New Fluent"></li>
+    			<li><input type="button" onclick="removeElement()" value="Remove"></li>
+    			<li><input type="button" onclick="insertText()" value="Insert Text"></li>
+    			<li><input type="button" onclick="setAsConclusion()" value="Set As Conclusion"></li>
+    			<li><input type="button" onclick="getClause()" value="Get Clause"></li>
+  				<li><input type="button" onclick="selectGraph()" value="Select Graph"></li>
+			</ul> -->
+		</div>
+		<div id="content" class="container">
+			<div id="splitter_panel">
+				<div id="left_panel" style="width: 620px;">
+					<div id="dh">
+						<ul>
+							<li><a href="#">Graph</a>
+								<ul>
+									<li><a href="#" onclick="initialize()">Initialize</a></li>
+									<li><a href="#" onclick="reactiveRule()">ReactiveRule</a></li>
+									<li><a href="#" onclick="macroAction()">MacroAction</a></li>
+								</ul></li>
+							<li><a href="#">Save..</a>
+								<ul>
+									<li><a href="#" onclick="save()">Save</a></li>
+									<li><a href="#" onclick="saveAs()">Save As</a></li>
+									<li><a href="#">Download Graph</a></li>
+								</ul>
+							</li>
+							<li><a href="#" onclick="newAction()">New Action</a>
+								<ul id="newAction">
+								</ul>
+							</li>
+							<li><a href="#" onclick="newFluent()">New Fluent</a>
+								<ul id="newFluent">
+								</ul>
+							</li>
+							<li><a href="#" onclick="getClause()">Get Clause</a></li>
+							<li><a href="#" onclick="selectGraph()">Select Graph</a>
+								<ul id="storedGraph">
+								</ul>
+							</li>
+						</ul>
+					</div>
+					<div>
+						<span>
+							<input type="text" id="myText" value="" onkeyup="inputRestrict(this)">
+						</span>
+						<span>
+						<select id="mode">
+							<option value="normal">Normal Mode</option>
+							<option value="text">Text Mode</option>
+							<option value="remove">Remove Mode</option>
+							<option value="conclude">Conclusion Mode</option>
+						</select>
+						</span>
+					</div>
+					<div id="myholder"></div>
+				</div>
+				<div id="right_panel" style="width: 620px;">
+					<div>
+						<textarea id="output" placeholder=""></textarea>
+					</div>
+					<div>
+						<div id="tabs">
+							<ul>
+								<li><a href="#tabs-1">Graph to LPS</a></li>
+								<li><a href="#tabs-2">New Causal Theory</a></li>
+								<li><a href="#tabs-3">New False Condition</a></li>
+							</ul>
+							<div id="tabs-1">
+								<button onclick="getFinalCode()">get LPS code</button>
+								<button onclick="deleteGraph()">Delete Graph</button>
+								<table id="wildMatch">
+									<tr>
+										<th>graphs</th>
+										<th>actions</th>
+										<th>fluents</th>
+										<th>macros</th>
+									</tr>
+									<tr>
+										<td><ul id="subgraphs"></ul></td>
+										<td><ul id="graphactions"></ul></td>
+										<td><ul id="graphfluents"></ul></td>
+										<td><ul id="graphmacros"></ul></td>
+									</tr>
+								</table>
+							</div>
+							<div id="tabs-2">
+								<table id="causalTheory">
+									<tr>
+										<th>action</th>
+										<td><input id="action" onkeyup="inputRestrict(this)" onclick="getAllAction()">
+											<select id="actionSelect" onchange="autoText('action')">
+												<option value="">please select an action</option>
+										</select></td>
+									</tr>
+									<tr>
+										<th>cause</th>
+										<td><select id="cause">
+												<option value="">please select</option>
+												<option value="initiates">initiates</option>
+												<option value="terminates">terminates</option>
+										</select></td>
+									</tr>
+									<tr>
+										<th>fluent</th>
+										<td><input id="fluent" onkeyup="inputRestrict(this)">
+											<select id="fluentSelect" onchange="autoText('fluent')">
+												<option value="">please select a fluent</option>
+										</select></td>
+									</tr>
+								</table>
+								<input type="button" onclick="newCondition()"
+									value="add condition"> <input type="button"
+									onclick="newCausalLaw()" value="submit">
+							</div>
+							<div id="tabs-3">
+								<table id="falseCondition">
+									<tr>
+										<th>condition</th>
+										<td>
+											<select>
+												<option value=""></option>
+												<option value="not">not</option>
+											</select>
+											<input onkeyup="inputRestrict(this)">
+											<select>
+												<option value=""></option>
+											</select>
+										</td>
+									</tr>
+								</table>
+								<input type="button" onclick="newCondition()"
+									value="add condition"> <input type="button"
+									onclick="newCausalLaw()" value="submit">
+							</div>
+						</div>
+					</div>
+				</div>
+		</div>
+	</div>
+	</div>
+	
+	<!-- dependencies -->
+    <script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/jquery.splitter.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/jquery-ui.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/lodash.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/backbone.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/joint.js" type="text/javascript" charset="utf-8"></script>
+	<script src="graph.js" type="text/javascript" charset="utf-8"></script>
+	<script src="code.js" type="text/javascript" charset="utf-8"></script>
+	
+	<script type="text/javascript">
+	var global = {
+			graph: null,
+			graphType: null,
+			currentGraph: null,
+			mode: 'normal',
+			collection: {
+				actions: [],
+				fluents: [],
+				macros: [],
+				actionsWild: [],
+				fluentsWild: [],
+				macrosWild: []
+			}
+	}
+	
+	function inputRestrict(obj) {
+		var regex = obj.value.replace(/[^\a-\z\A-\Z0-9\(\)\,\_\ ]/g,'');
+		if(obj.value != regex) {
+			obj.value = regex;
+		}
+	}
+	
+	$('#whole').height(630).split({
+    	orientation: 'horizontal',
+    	limit: {leftUpper: 60, rightBottom: 570},
+    	position: 60, // if there is no percentage it interpret it as pixels
+     	onDrag: function(event) {
+        	console.log(splitter.position());
+    	}
+	});
+	
+	$('#splitter_panel').height(568).split({
+    	orientation: 'vertical',
+    	limit: {leftUpper: 620, rightBottom: 620},
+    	position: '50%', // if there is no percentage it interpret it as pixels
+     	onDrag: function(event) {
+        	console.log(splitter.position());
+    	}
+	});
+	
+	$('#right_panel').height(568).split({
+    	orientation: 'horizontal',
+    	limit: {leftUpper: 283, rightBottom: 283},
+    	position: '50%', // if there is no percentage it interpret it as pixels
+     	onDrag: function(event) {
+        	console.log(splitter.position());
+    	}
+	});
+	
+	$(function() {
+	    $('#tabs').tabs();
+	});
+	
+	
+	</script>
+	
+</body>
+
+<!-- <frameset cols="50%, 50%"> 
+   <frame id="graph" src="graph.html"/>  
+   <frameset rows="60%, 40%">
+      <frame id="code" src="code.html"/>  
+      <frame id="extra" src="extra.html">
+   </frameset>
+</frameset>  -->
+
+</html>

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.lps.exception.CellStrMismatchException;
+
 public class MacroAction extends Graph {
 	
 	public MacroAction(String name) {
@@ -11,7 +13,7 @@ public class MacroAction extends Graph {
 	}	
 
 	@Override
-	public String toString() {
+	public String getString() throws CellStrMismatchException {
 		StringBuffer sb = new StringBuffer();
 		List<Cell> premises = new ArrayList<Cell>();
 		for(Action a : actions) {
@@ -25,7 +27,14 @@ public class MacroAction extends Graph {
 		int temptime = 1;
 		List<String> premisePhrase = new ArrayList<String>();
 		for(Cell c : premises) {
-			premisePhrase.add(c.getPhrase());
+			try {
+				premisePhrase.add(c.getPhrase());
+			} catch (CellStrMismatchException e) {
+				String cellType = c instanceof Action ? "action " : "fluent ";
+				String message = cellType + c.getText() + " in initGraph "
+						+ this.name + " is not in a valid form";
+				throw new CellStrMismatchException(message);
+			}
 			if(c.getStartTime() > temptime) 
 				premisePhrase.add("T" + c.getStartTime() + " > T" + temptime);
 			temptime = c.getEndTime();

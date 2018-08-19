@@ -1,0 +1,105 @@
+@charset "UTF-8";
+
+* {
+	margin: 0px;
+	padding: 0px;
+}
+
+#dh {
+	position: relative;
+	margin-top: 0px;
+	width: 600px;
+	height: 40px;
+	border: 0px;
+	background-color: #0099CC;
+	z-index: 1;
+}
+
+#dh ul {
+	padding: 0px;
+}
+
+#dh a {
+	color: #FFF;
+	width: 100px;
+	height: 40px;
+	display: block;
+	text-decoration: none;
+	text-align: center;
+	line-height: 40px;
+	font-family: Times New Roman;
+	font-weight: 2px;
+}
+
+#dh {
+	margin: 0px auto;
+}
+
+#dh ul li {
+	list-style: none;
+	float: left;
+}
+
+#dh ul li a:hover {
+	background-color: #6699FF;
+}
+
+#dh ul:hover {
+	display: block;
+}
+
+#dh ul li ul {
+	background-color: #0099CC;
+	position: absolute;
+	display: none;
+}
+
+#dh ul li ul li {
+	float: none;
+	background-color: #6688EE;
+}
+
+#dh ul li ul li a {
+	font-size: 13px;
+	font-weight: 0px;
+}
+
+#dh ul li ul li button {
+	font-size: 13px;
+	font-weight: 0px;
+}
+
+#dh ul li:hover ul { /*二级菜单的触发点*/
+	display: block;
+}
+
+ul>li {
+  list-style: none;
+}
+a.selectGraph, a.cell {
+  background: darkcyan;
+  color: white;
+  display: block;
+  width: 100px;
+  padding: 10px;
+  text-decoration: none;
+  border-bottom: 1px solid white;
+}
+a.selectGraph input.subgraph {
+  float: right;
+}
+
+#wildMatch {
+    border: 1px solid black;
+    width: 100%;
+    table-layout: fixed;
+}
+
+#wildMatch>ul{
+    text-align: center;
+}
+
+#myholder {
+	z-index: 0;
+/* 	position: relative; */
+}

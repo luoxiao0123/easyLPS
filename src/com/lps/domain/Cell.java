@@ -1,5 +1,7 @@
 package com.lps.domain;
 
+import com.lps.exception.CellStrMismatchException;
+
 public abstract class Cell implements Comparable<Cell> {
 	static final int TIME_INTERVAL = 40;
 	protected String text;
@@ -17,14 +19,10 @@ public abstract class Cell implements Comparable<Cell> {
 		return this.y - c.y;
 	}
 	
-	public String toWildMatch() {
-		return null;
-	}
-	
 	public abstract int getStartTime();
 	public abstract int getEndTime();
-	public abstract String getInitPhrase();
-	public abstract String getPhrase();
+	public abstract String getInitPhrase() throws CellStrMismatchException;
+	public abstract String getPhrase() throws CellStrMismatchException;
 
 	public String getText() {
 		return text;

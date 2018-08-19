@@ -1,5 +1,8 @@
 package com.lps.domain;
 
+import com.lps.exception.CellStrMismatchException;
+import com.lps.utils.CellUtils;
+
 public class Fluent extends Cell {
 	private boolean isModified;
 	
@@ -19,13 +22,13 @@ public class Fluent extends Cell {
 	}
 	
 	@Override
-	public String getInitPhrase() {
-		return "initially " + text + ".";
+	public String getInitPhrase() throws CellStrMismatchException {
+		return CellUtils.toStandardForm(text);
 	}
 	
 	@Override
-	public String getPhrase() {
-		return text + " at T" + getStartTime();
+	public String getPhrase() throws CellStrMismatchException {
+		return CellUtils.toStandardForm(text) + " at T" + getStartTime();
 	}
 
 	public boolean isModified() {

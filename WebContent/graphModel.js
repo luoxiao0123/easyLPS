@@ -61,7 +61,12 @@ function graphBase(graphType) {
     	if(cellView.model instanceof joint.shapes.standard.Rectangle
     			|| cellView.model instanceof joint.shapes.standard.Polyline) {
     		if(global.mode === "text") {
-    			cellView.model.attr('label/text', document.getElementById("myText").value);
+    			var cellName = document.getElementById("myText").value;
+    			if(!isValidName(cellName)) {
+    				alert(cellName + " is not a valid cell name");
+    				return;
+    			}
+    			cellView.model.attr('label/text', toStandardForm(cellName));
     			cellView.model.attr('label/fill', 'white');
     		} else if(global.mode === "remove") {
     			cellView.model.remove();
@@ -121,6 +126,16 @@ function newFluent() {
 	fluent.addTo(global.graph);
 };
 
+function isValidName(str) {
+	var regex = /^(\s)*[a-z](\w)*(\s)*(\((\s)*(\w)+(\s)*(,(\s)*(\w)+(\s)*)*\))?$/;
+	return str.match(regex);
+}
+
+function toStandardForm(str) {
+	var strNoSpace = str.replace(/\s+/g, '');
+	return strNoSpace.replace(/,/g, ', ');
+}
+
 function save() {
 	if(global.currentGraphButton === null){
 		saveAs();
@@ -132,14 +147,24 @@ function save() {
 function saveAs() {
 	var name = prompt("Please input the name for the " + global.graphType, "");
 	if(name){
+		if(global.graphType == "macroaction" && !isValidName(name)){
+			alert(name + " is not a valid name for a macroaction");
+			return;
+		}
 		var node = document.createElement("LI");
+		var checkbox = document.createElement("INPUT");
 		var button = document.createElement("BUTTON");
 		var del = document.createElement("BUTTON");
-		button.innerHTML = name + "." + global.graphType;
+		checkbox.setAttribute("name", "subgraph");
+		checkbox.setAttribute("type", "checkbox");
+		checkbox.setAttribute("checked", "checked");
+		checkbox.setAttribute("style", "display:none");
+		button.innerHTML = toStandardForm(name) + "." + global.graphType;
 		del.innerHTML = "delete";
 		button.setAttribute("jsonstring", JSON.stringify(global.graph.toJSON()));
 		button.setAttribute("graphtype", global.graphType);
-		button.setAttribute("graphname", name);
+		button.setAttribute("graphname", toStandardForm(name));
+		node.appendChild(checkbox);
 		node.appendChild(button);
 		node.appendChild(del);
 	    document.getElementById('storedGraph').appendChild(node);
@@ -193,4 +218,76 @@ function toJson() {
 
 function jsonStr() {
 	alert(JSON.stringify(global.graph.toJSON()));
+}
+
+function selectGraph() {
+	document.getElementById("getCode").style.display = "block";
+	document.getElementById("hideSelect").style.display = "block";
+	var subgraphList = document.getElementsByName("subgraph");
+	$.each(subgraphList, function(i, ele){
+		ele.style.display = "block";
+	});
+}
+
+function hideSelect() {
+	document.getElementById("getCode").style.display = "none";
+	document.getElementById("hideSelect").style.display = "none";
+	var subgraphList = document.getElementsByName("subgraph");
+	$.each(subgraphList, function(i, ele){
+		ele.style.display = "none";
+	});
+}
+
+function graphButtonToJson(button) {
+	var graphJson = {
+		"jsonStr": button.getAttribute("jsonstring"),
+		"graphType": button.getAttribute("graphtype"),
+		"graphName": button.getAttribute("graphname")
+	}
+	return graphJson;
+}
+
+function getFinalCode() {
+	var subgraphList = document.getElementsByName("subgraph");
+	if(subgraphList.length == 0) {
+		alert("There is no saved graph!");
+		return;
+	}
+	var graphJson = {
+		initGraph : [],
+		reactGraph : [],
+		macroGraph : []
+	}
+	$.each(subgraphList, function(i, ele){
+		if(ele.checked) {
+			if(ele.parentNode.children[1].getAttribute("graphType") == "initialize") {
+				graphJson.initGraph.push(graphButtonToJson(ele.parentNode.children[1]));
+			}
+			else if(ele.parentNode.children[1].getAttribute("graphType") == "reactiverule") {
+				graphJson.reactGraph.push(graphButtonToJson(ele.parentNode.children[1]));
+			}
+			else if(ele.parentNode.children[1].getAttribute("graphType") == "macroaction") {
+				graphJson.macroGraph.push(graphButtonToJson(ele.parentNode.children[1]));
+			}
+		}
+	});
+	if(graphJson.initGraph.length > 1) {
+		alert("There can be at most 1 initialization graph!");
+		return;
+	}
+	$.ajax({
+		url : "CompileServlet",
+		type : "post",
+		data : {
+			"graphJson": JSON.stringify(graphJson)
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown){ 
+			alert(XMLHttpRequest.responseText);
+		},
+		success : function(data) {
+			var jsonData = JSON.parse(data);
+			parent.frames["code"].document.getElementById('output').value = jsonData.code;
+			alert(data);
+		}
+	});
 }
