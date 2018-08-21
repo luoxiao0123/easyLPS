@@ -10,8 +10,8 @@ import com.lps.exception.RevCausalException;
 
 public class ReactiveRule extends Graph {
 
-	public ReactiveRule(String name) {
-		super(name);
+	public ReactiveRule(String name, String id) {
+		super(name, id);
 	}
 
 	@Override

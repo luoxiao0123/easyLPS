@@ -67,7 +67,7 @@ function getGraphJson() {
 			}
 		}
 	});
-	return JSON.stringify(graphJson);
+	return graphJson;
 }
 
 function getCausalJson() {
@@ -84,7 +84,7 @@ function getCausalJson() {
 				});
 		}
 	});
-	return JSON.stringify(arr);
+	return arr;
 }
 
 function getprecondJson() {
@@ -99,7 +99,7 @@ function getprecondJson() {
 				});
 		}
 	});
-	return JSON.stringify(arr);
+	return arr;
 }
 
 function parseJSON(jsonData) {
@@ -120,10 +120,9 @@ function parseJSON(jsonData) {
 }
 
 function jsonDataToGraph(data) {
-	var parsedData = JSON.parse(data);
-	dataToGraph(parsedData.initGraph);
-	dataToGraph(parsedData.reactGraph);
-	dataToGraph(parsedData.macroGraph);
+	dataToGraph(data.initGraph);
+	dataToGraph(data.reactGraph);
+	dataToGraph(data.macroGraph);
 }
 
 function dataToGraph(data) {
@@ -174,8 +173,7 @@ function inGraphList(id) {
 
 function jsonDataToCausal(data) {
 	var div = document.getElementById("causalStr");
-	var arr = JSON.parse(data);
-	$.each(arr, function(i, ele) {
+	$.each(data, function(i, ele) {
 		var p = document.createElement("P");
 		var span = document.createElement("SPAN");
 		var checkbox = document.createElement("INPUT");
@@ -192,8 +190,7 @@ function jsonDataToCausal(data) {
 
 function jsonDataToPrecond(data) {
 	var div = document.getElementById("preCondStr");
-	var arr = JSON.parse(data);
-	$.each(arr, function(i, ele) {
+	$.each(data, function(i, ele) {
 		var p = document.createElement("P");
 		var span = document.createElement("SPAN");
 		var checkbox = document.createElement("INPUT");

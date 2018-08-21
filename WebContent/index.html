@@ -17,7 +17,7 @@
 		<div id="navbar">
 			<a href="#" class="left">Home</a>
   			<a href="#" class="left">Tutorial</a>
-  			<a href="#" class="left">Contact</a>
+  			<a href="#" class="left" onclick="toLPS()">Get LPS</a>
   			<a href="http://demo.logicalcontracts.com/" target="_blank" class="right">Run in Swish</a>
   			<a href="#" id="fileSelect" class="right">Upload file</a>
   			<input type="file" id="fileElem" accept="text/plain" style="display:none" onchange="handleFiles(this.files)">
@@ -177,6 +177,7 @@
 	<script src="graph.js" type="text/javascript" charset="utf-8"></script>
 	<script src="code.js" type="text/javascript" charset="utf-8"></script>
 	<script src="file.js" type="text/javascript" charset="utf-8"></script>
+	<script src="lps.js" type="text/javascript" charset="utf-8"></script>
 	
 	<script type="text/javascript">
 	var global = {
@@ -216,7 +217,7 @@
 	}
 	
 	function condRestrict(obj) {
-		var regex = obj.value.replace(/[^\a-\z\A-\Z0-9\(\)\,\_\ \@\<\>\=\+\-\*\/]/g,'');
+		var regex = obj.value.replace(/[^\a-\z\A-\Z0-9\(\)\,\_\ \@\<\>\=\+\-\*\/\\]/g,'');
 		if(obj.value != regex) {
 			obj.value = regex;
 		}

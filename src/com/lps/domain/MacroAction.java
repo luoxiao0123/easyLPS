@@ -8,8 +8,8 @@ import com.lps.exception.CellStrMismatchException;
 
 public class MacroAction extends Graph {
 	
-	public MacroAction(String name) {
-		super(name);
+	public MacroAction(String name, String id) {
+		super(name, id);
 	}	
 
 	@Override

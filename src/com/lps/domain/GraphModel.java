@@ -44,7 +44,8 @@ public class GraphModel {
 		for(int i = 0; i < initArray.size(); i++) {
 			JSONObject initObj = initArray.getJSONObject(i);
 			String name = initObj.getString("graphName");
-			InitGraph initGraph = new InitGraph(name);
+			String id = initObj.getString("graphId");
+			InitGraph initGraph = new InitGraph(name, id);
 			initGraph.populate(initObj.getString("jsonStr"));
 			initGraphs.add(initGraph);
 			getActionAndFluent(initGraph);
@@ -52,7 +53,8 @@ public class GraphModel {
 		for(int i = 0; i < reactArray.size(); i++) {
 			JSONObject reactObj = reactArray.getJSONObject(i);
 			String name = reactObj.getString("graphName");
-			ReactiveRule reactiveRule = new ReactiveRule(name);
+			String id = reactObj.getString("graphId");
+			ReactiveRule reactiveRule = new ReactiveRule(name, id);
 			reactiveRule.populate(reactObj.getString("jsonStr"));
 			reactiveRules.add(reactiveRule);
 			getActionAndFluent(reactiveRule);
@@ -60,7 +62,8 @@ public class GraphModel {
 		for(int i = 0; i < macroArray.size(); i++) {
 			JSONObject macroObj = macroArray.getJSONObject(i);
 			String name = macroObj.getString("graphName");
-			MacroAction macroAction = new MacroAction(name);
+			String id = macroObj.getString("graphId");
+			MacroAction macroAction = new MacroAction(name, id);
 			macroAction.populate(macroObj.getString("jsonStr"));
 			macroActions.add(macroAction);
 			getActionAndFluent(macroAction);

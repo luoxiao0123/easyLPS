@@ -8,8 +8,8 @@ import com.lps.exception.CellStrMismatchException;
 
 public class InitGraph extends Graph {
 	
-	public InitGraph(String name) {
-		super(name);
+	public InitGraph(String name, String id) {
+		super(name, id);
 	}
 	
 	

@@ -39,8 +39,9 @@ public class ClauseServlet extends HttpServlet {
 		String jsonString = (String) request.getParameter("jsonStr");
 		String graphType = (String) request.getParameter("graphType");
 		String graphName = (String) request.getParameter("graphName");
+		String graphId = (String) request.getParameter("graphId");
 		if("initialize".equals(graphType)) {
-			InitGraph initGraph = new InitGraph(graphName);
+			InitGraph initGraph = new InitGraph(graphName, graphId);
 			initGraph.populate(jsonString);
 			try {
 				String str = initGraph.getString();
@@ -50,7 +51,7 @@ public class ClauseServlet extends HttpServlet {
 				response.getWriter().write(e.getMessage());
 			}
 		}else if("reactiverule".equals(graphType)) {
-			ReactiveRule reactiveRule = new ReactiveRule(graphName);
+			ReactiveRule reactiveRule = new ReactiveRule(graphName, graphId);
 			reactiveRule.populate(jsonString);
 			try {
 				String str = reactiveRule.getString();
@@ -60,7 +61,7 @@ public class ClauseServlet extends HttpServlet {
 				response.getWriter().write(e.getMessage());
 			}
 		}else if("macroaction".equals(graphType)) {
-			MacroAction macroAction = new MacroAction(graphName);
+			MacroAction macroAction = new MacroAction(graphName, graphId);
 			macroAction.populate(jsonString);
 			try {
 				String str = macroAction.getString();

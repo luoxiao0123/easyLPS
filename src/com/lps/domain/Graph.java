@@ -16,12 +16,14 @@ public abstract class Graph {
 	protected List<Fluent> fluents;
 	protected List<Condition> conditions;
 	protected String name;
+	protected String id;
 	
-	public Graph(String name) {
+	public Graph(String name, String id) {
 		actions = new ArrayList<Action>();
 		fluents = new ArrayList<Fluent>();
 		conditions = new ArrayList<Condition>();
 		this.name = name;
+		this.id = id;
 	}
 	
 	public boolean populate(String jsonString) {
@@ -71,5 +73,9 @@ public abstract class Graph {
 
 	public String getName() {
 		return name;
+	}
+	
+	public String getId() {
+		return id;
 	}
 }

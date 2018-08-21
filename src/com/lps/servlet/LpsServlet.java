@@ -7,19 +7,22 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.lps.domain.CausalLaw;
+import com.lps.domain.Page;
+import com.lps.exception.CellStrMismatchException;
+import com.lps.exception.NoConclusionException;
+import com.lps.exception.RevCausalException;
 
 /**
- * Servlet implementation class CausalServlet
+ * Servlet implementation class LpsServlet
  */
-@WebServlet("/CausalServlet")
-public class CausalServlet extends HttpServlet {
-	private static final long serialVersionUID = 3L;
+@WebServlet("/LpsServlet")
+public class LpsServlet extends HttpServlet {
+	private static final long serialVersionUID = 9L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public CausalServlet() {
+    public LpsServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -30,16 +33,21 @@ public class CausalServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setHeader("Content-type", "text/html;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
-		String jsonString = (String) request.getParameter("causalLaw");
-		CausalLaw causalLaw = new CausalLaw(jsonString);
-		response.getWriter().write(causalLaw.getString());
+		String pageJson = (String) request.getParameter("pageJson");
+		Page page = new Page();
+		try {
+			page.populate(pageJson);
+			response.getWriter().write(page.toJSONObject().toString());
+		} catch (CellStrMismatchException | NoConclusionException | RevCausalException e) {
+			response.setStatus(400);
+			response.getWriter().write(e.getMessage());
+		}
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 
