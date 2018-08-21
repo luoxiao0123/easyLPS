@@ -41,7 +41,10 @@ public class InitGraph extends Graph {
 			}
 		}
 		if(fluentStr.size() > 0) {
-			sb.append("initially ").append(String.join(", ", fluentStr)).append(".");
+			sb.append("initially ").append(String.join(", ", fluentStr)).append(".\n");
+		}
+		for(Condition c : conditions) {
+			sb.append(c.getInitPhrase());
 		}
 		return sb.toString();
 	}

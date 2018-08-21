@@ -76,9 +76,24 @@ function graphBase(graphType) {
     			cellView.model.remove();
     		}
     	}
-    	if(cellView.model instanceof joint.shapes.standard.Rectangle
-    			&& global.graphType === "reactiverule"
-    				&& mode === "conclude") {
+    	if(cellView.model instanceof joint.shapes.standard.Ellipse) {
+    		if(mode === "text") {
+    			var cellName = document.getElementById("myText").value.trim().resetBlank();
+    			if(cellName == "" || cellName == null) {
+    				alert("Please insert the name for condition/fact");
+    				return;
+    			}
+    			cellView.model.attr('label/text', cellName);
+    			cellView.model.attr('label/fill', 'white');
+    			addCellButton("newCond", cellName);    			
+    		} else if(mode === "remove") {
+    			cellView.model.remove();
+    		}
+    	}
+    	if((cellView.model instanceof joint.shapes.standard.Rectangle
+    			|| cellView.model instanceof joint.shapes.standard.Ellipse)
+    				&& global.graphType === "reactiverule"
+    					&& mode === "conclude") {
     		if(cellView.model.attr('label/fill') === 'white')
     			cellView.model.attr('label/fill', 'red');
     		else if(cellView.model.attr('label/fill') === 'red')
@@ -92,6 +107,8 @@ function graphBase(graphType) {
     		elementView.model.position(evt.data.x, evt.data.y - evt.data.y % 40);
     	} else if (elementView.model instanceof joint.shapes.standard.Polyline) {
     		elementView.model.position(evt.data.x, evt.data.y - (evt.data.y + 20) % 40);
+    	} else if (elementView.model instanceof joint.shapes.standard.Ellipse) {
+    		elementView.model.position(evt.data.x, evt.data.y - (evt.data.y + 10) % 20);
     	}
     });
     
@@ -106,6 +123,14 @@ function toStandardForm(str) {
 	var strNoSpace = str.replace(/\s+/g, '');
 	return strNoSpace.replace(/,/g, ', ');
 }
+
+String.prototype.resetBlank=function() {
+	 return this.replace(/\s+/g, ' '); 
+};
+
+String.prototype.trim = function () { 
+	return this.replace(/(^\s*)|(\s*$)/g, ""); 
+};
 
 function newAction(name) {
 	var action = new joint.shapes.standard.Rectangle();
@@ -167,12 +192,44 @@ function newFluent(name) {
 	fluent.addTo(global.graph);
 };
 
+function newCond(name) {
+	var cond = new joint.shapes.standard.Ellipse();
+	var x = Math.floor(Math.random()*500);
+	if(name == null) {
+		cond.position(x, 30);
+		cond.attr({
+	        body: {
+	            fill: '#F7DC6F'
+	        },
+	        label: {
+	            text: 'condition',
+	            fill: 'black'
+	        }
+	    });
+	} else {
+		cond.position(x, 450);
+		cond.attr({
+	        body: {
+	            fill: '#F7DC6F'
+	        },
+	        label: {
+	            text: name,
+	            fill: 'white'
+	        }
+	    });
+	}
+	cond.resize(100, 40);
+	cond.addTo(global.graph);
+};
+
 function addCellButton(id, cellName) {
 	var className;
 	if(id == "newAction") {
 		className = "oldAction";
 	} else if(id == "newFluent") {
 		className = "oldFluent";
+	} else if(id == "newCond") {
+		className = "oldCond";
 	} else {
 		return;
 	}
@@ -196,6 +253,11 @@ function addCellButton(id, cellName) {
 		ahref.onclick = function() {
 			newFluent(cellName);
 		}
+	} else if(id == "newCond") {
+		ahref.className = "oldCond";
+		ahref.onclick = function() {
+			newCond(cellName);
+		}
 	}
 }
 
@@ -204,6 +266,7 @@ function save() {
 		saveAs();
 	} else {
 		global.currentGraph.setAttribute("jsonstring", JSON.stringify(global.graph.toJSON()));
+		global.currentGraph.setAttribute("graphid", new Date().getTime() + "" + Math.floor(Math.random() * 1000));
 	}
 };
 
@@ -228,6 +291,7 @@ function saveAs() {
 		ahref.setAttribute("jsonstring", JSON.stringify(global.graph.toJSON()));
 		ahref.setAttribute("graphtype", global.graphType);
 		ahref.setAttribute("graphname", toStandardForm(name));
+		ahref.setAttribute("graphid", new Date().getTime() + "" + Math.floor(Math.random() * 1000));
 		checkbox.className = "subgraph";
 		checkbox.setAttribute("type", "checkbox");
 		checkbox.setAttribute("checked", "checked");
@@ -259,7 +323,8 @@ function getClause() {
 			data : {
 				"jsonStr": JSON.stringify(global.graph.toJSON()), 
 				"graphType": global.graphType,
-				"graphName": global.currentGraph.getAttribute("graphname")
+				"graphName": global.currentGraph.getAttribute("graphname"),
+				"graphId": global.currentGraph.getAttribute("graphid")
 			},
 			error : function(XMLHttpRequest, textStatus, errorThrown){ 
 				alert(XMLHttpRequest.responseText);

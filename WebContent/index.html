@@ -6,6 +6,7 @@
 <link rel="stylesheet" type="text/css" href="js/joint.css" />
 <link rel="stylesheet" type="text/css" href="css/jquery.splitter.css" />
 <link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="navbar.css" />
 <link rel="stylesheet" type="text/css" href="code.css" />
 <link rel="stylesheet" type="text/css" href="dropdown.css" />
 </head>
@@ -13,24 +14,17 @@
 <body>
 	<div id="whole">
 		<div id="navbar">
-<!-- 			<ul>
-    			<li><input type="button" onclick="initialize()" value="Initialization"></li>
-    			<li><input type="button" onclick="reactiveRule()" value="ReactiveRule"></li>
-    			<li><input type="button" onclick="macroAction()" value="MacroAction"></li>
-    			<li><input type="button" onclick="save()" value="Save"></li>
-    			<li><input type="button" onclick="saveAs()" value="SaveAs"></li>
-    			<li><input type="button" onclick="newAction()" value="New Action"></li>
-    			<li><input type="button" onclick="newFluent()" value="New Fluent"></li>
-    			<li><input type="button" onclick="removeElement()" value="Remove"></li>
-    			<li><input type="button" onclick="insertText()" value="Insert Text"></li>
-    			<li><input type="button" onclick="setAsConclusion()" value="Set As Conclusion"></li>
-    			<li><input type="button" onclick="getClause()" value="Get Clause"></li>
-  				<li><input type="button" onclick="selectGraph()" value="Select Graph"></li>
-			</ul> -->
+			<a href="#" class="left">Home</a>
+  			<a href="#" class="left">Tutorial</a>
+  			<a href="#" class="left">Contact</a>
+  			<a href="http://demo.logicalcontracts.com/" target="_blank" class="right">Run in Swish</a>
+  			<a href="#" id="fileSelect" class="right">Upload file</a>
+  			<input type="file" id="fileElem" accept="text/plain" style="display:none" onchange="handleFiles(this.files)">
+  			<a href="#" id="download" class="right">Download</a>
 		</div>
 		<div id="content" class="container">
 			<div id="splitter_panel">
-				<div id="left_panel" style="width: 620px;">
+				<div id="left_panel" style="width: 618px;">
 					<div id="dh">
 						<ul>
 							<li><a href="#">Graph</a>
@@ -54,16 +48,16 @@
 								<ul id="newFluent">
 								</ul>
 							</li>
-							<li><a href="#" onclick="getClause()">Get Clause</a></li>
-							<li><a href="#" onclick="selectGraph()">Select Graph</a>
-								<ul id="storedGraph">
+							<li><a href="#" onclick="newCond()">New Condition</a>
+								<ul id="newCond">
 								</ul>
 							</li>
+							<li><a href="#" onclick="getClause()">Get Clause</a></li>
 						</ul>
 					</div>
 					<div>
 						<span>
-							<input type="text" id="myText" value="" onkeyup="inputRestrict(this)">
+							<input type="text" id="myText" value="" onkeyup="condRestrict(this)">
 						</span>
 						<span>
 						<select id="mode">
@@ -76,7 +70,7 @@
 					</div>
 					<div id="myholder"></div>
 				</div>
-				<div id="right_panel" style="width: 620px;">
+				<div id="right_panel" style="width: 618px;">
 					<div>
 						<textarea id="output" placeholder=""></textarea>
 					</div>
@@ -84,8 +78,8 @@
 						<div id="tabs">
 							<ul>
 								<li><a href="#tabs-1">Graph to LPS</a></li>
-								<li><a href="#tabs-2">New Causal Theory</a></li>
-								<li><a href="#tabs-3">New False Condition</a></li>
+								<li><a href="#tabs-2">Causal Theory</a></li>
+								<li><a href="#tabs-3">Precondition</a></li>
 							</ul>
 							<div id="tabs-1">
 								<button onclick="getFinalCode()">get LPS code</button>
@@ -109,50 +103,56 @@
 								<table id="causalTheory">
 									<tr>
 										<th>action</th>
-										<td><input id="action" onkeyup="inputRestrict(this)" onclick="getAllAction()">
-											<select id="actionSelect" onchange="autoText('action')">
+										<td><input id="action" onkeyup="inputRestrict(this)"
+													onclick="getAllAction()">
+											<select class="actionSelect" onchange="autoText('action')">
 												<option value="">please select an action</option>
 										</select></td>
 									</tr>
 									<tr>
 										<th>cause</th>
-										<td><select id="cause">
+										<td><select id="cause" onchange="causeChg()">
 												<option value="">please select</option>
 												<option value="initiates">initiates</option>
 												<option value="terminates">terminates</option>
+												<option value="updates">updates</option>
 										</select></td>
+									</tr>
+									<tr id="fromto" style="display:none">
+										<th></th>
+										<td><span><input id="from" onkeyup="alnumRestrict(this)"></span>
+											<span>to</span>
+											<span><input id="to" onkeyup="alnumRestrict(this)"></span>
+											<span>in</span>
+										</td>
 									</tr>
 									<tr>
 										<th>fluent</th>
 										<td><input id="fluent" onkeyup="inputRestrict(this)">
-											<select id="fluentSelect" onchange="autoText('fluent')">
+											<select class="fluentSelect" onchange="autoText('fluent')">
 												<option value="">please select a fluent</option>
 										</select></td>
 									</tr>
 								</table>
-								<input type="button" onclick="newCondition()"
-									value="add condition"> <input type="button"
-									onclick="newCausalLaw()" value="submit">
+								<input type="button" onclick="newCondition()" value="add condition"> 
+								<input type="button" onclick="resetCausalLaw()" value="reset"> 
+								<input type="button" onclick="newCausalLaw()" value="submit">
+								<div id="causalStr"></div>
+								<input type="button" onclick="delInputClause('causalStr')" value="delete"> 
+								<input type="button" onclick="CausalLawToLPS()" value="toLPS">
 							</div>
 							<div id="tabs-3">
-								<table id="falseCondition">
-									<tr>
-										<th>condition</th>
-										<td>
-											<select>
-												<option value=""></option>
-												<option value="not">not</option>
-											</select>
-											<input onkeyup="inputRestrict(this)">
-											<select>
-												<option value=""></option>
-											</select>
-										</td>
-									</tr>
+								<p>Please input actions, fluents, and conditions which cannot happen together</p>
+								<table id="precondition">
 								</table>
-								<input type="button" onclick="newCondition()"
-									value="add condition"> <input type="button"
-									onclick="newCausalLaw()" value="submit">
+								<input type="button" onclick="addCell('action')" value="add action"> 
+								<input type="button" onclick="addCell('fluent')" value="add fluent"> 
+								<input type="button" onclick="addCell('condition')" value="add condition"> 
+								<input type="button" onclick="resetPrecondition()" value="reset"> 
+								<input type="button" onclick="newPrecondition()" value="submit"> 
+								<div id="preCondStr"></div>
+								<input type="button" onclick="delInputClause('preCondStr')" value="delete"> 
+								<input type="button" onclick="preconditionToLPS()" value="toLPS">
 							</div>
 						</div>
 					</div>
@@ -170,6 +170,7 @@
 	<script src="js/joint.js" type="text/javascript" charset="utf-8"></script>
 	<script src="graph.js" type="text/javascript" charset="utf-8"></script>
 	<script src="code.js" type="text/javascript" charset="utf-8"></script>
+	<script src="file.js" type="text/javascript" charset="utf-8"></script>
 	
 	<script type="text/javascript">
 	var global = {
@@ -189,6 +190,27 @@
 	
 	function inputRestrict(obj) {
 		var regex = obj.value.replace(/[^\a-\z\A-\Z0-9\(\)\,\_\ ]/g,'');
+		if(obj.value != regex) {
+			obj.value = regex;
+		}
+	}
+	
+	function numRestrict(obj) {
+		var regex = obj.value.replace(/[^0-9]/g,'');
+		if(obj.value != regex) {
+			obj.value = regex;
+		}
+	}
+	
+	function alnumRestrict(obj) {
+		var regex = obj.value.replace(/[^\a-\z\A-\Z0-9\_]/g,'');
+		if(obj.value != regex) {
+			obj.value = regex;
+		}
+	}
+	
+	function condRestrict(obj) {
+		var regex = obj.value.replace(/[^\a-\z\A-\Z0-9\(\)\,\_\ \@\<\>\=\+\-\*\/]/g,'');
 		if(obj.value != regex) {
 			obj.value = regex;
 		}
@@ -229,13 +251,5 @@
 	</script>
 	
 </body>
-
-<!-- <frameset cols="50%, 50%"> 
-   <frame id="graph" src="graph.html"/>  
-   <frameset rows="60%, 40%">
-      <frame id="code" src="code.html"/>  
-      <frame id="extra" src="extra.html">
-   </frameset>
-</frameset>  -->
 
 </html>

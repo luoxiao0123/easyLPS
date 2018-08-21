@@ -18,7 +18,7 @@ public class ReactiveRule extends Graph {
 	public String getString() throws CellStrMismatchException, 
 	NoConclusionException, RevCausalException {
 		List<Cell> premises = new ArrayList<Cell>();
-		List<Action> conclusions = new ArrayList<Action>();
+		List<Cell> conclusions = new ArrayList<Cell>();
 		for(Action a : actions) {
 			if(a.isModified()) {
 				if(a.isConclusion()) conclusions.add(a);
@@ -27,6 +27,12 @@ public class ReactiveRule extends Graph {
 		}
 		for(Fluent f : fluents) {
 			if(f.isModified()) premises.add(f);
+		}
+		for(Condition c : conditions) {
+			if(c.isModified()) {
+				if(c.isConclusion()) conclusions.add(c);
+				else premises.add(c);
+			}
 		}
 		if(conclusions.size() == 0) {
 			String message = "ReactiveRule " + this.name + " does not have"
@@ -39,7 +45,7 @@ public class ReactiveRule extends Graph {
 		StringBuffer sb = new StringBuffer();
 		List<String> premisePhrase = new ArrayList<String>();
 		List<String> conclusionPhrase = new ArrayList<String>();
-		int temptime = 1;
+		int temptime = 1, concluStartTime = 100;
 		sb.append("if ");
 		for(Cell c : premises) {
 			try {
@@ -50,17 +56,25 @@ public class ReactiveRule extends Graph {
 						+ this.name + " is not in a valid form";
 				throw new CellStrMismatchException(message);
 			}
-			if(c.getStartTime() > temptime) 
-				premisePhrase.add("T" + c.getStartTime() + " > T" + temptime);
-			temptime = c.getEndTime();
+			if(c.getStartTime() > 0) {
+				if(c.getStartTime() > temptime) 
+					premisePhrase.add("T" + c.getStartTime() + " > T" + temptime);
+				temptime = c.getEndTime();
+			}
 		}
-		if(temptime > conclusions.get(0).getStartTime()) {
+		for(Cell c : conclusions) {
+			if(c.getStartTime() > 0) {
+				concluStartTime = c.getStartTime();
+				break;
+			}
+		}
+		if(temptime > concluStartTime) {
 			String message = "ReactiveRule " + this.name + " has conclusion "
 					+ conclusions.get(0).getText() + " occurred earlier than"
 					+ " at least one premise";
 			throw new RevCausalException(message);
 		}
-		for(Action a : conclusions) {
+		for(Cell a : conclusions) {
 			try {
 				conclusionPhrase.add(a.getPhrase());
 			} catch (CellStrMismatchException e) {
@@ -68,9 +82,11 @@ public class ReactiveRule extends Graph {
 						+ this.name + " is not in a valid form";
 				throw new CellStrMismatchException(message);
 			}
-			if(a.getStartTime() > temptime) 
-				conclusionPhrase.add("T" + a.getStartTime() + " > T" + temptime);
-			temptime = a.getEndTime();
+			if(a.getStartTime() > 0) {
+				if(a.getStartTime() > temptime) 
+					conclusionPhrase.add("T" + a.getStartTime() + " > T" + temptime);
+				temptime = a.getEndTime();
+			}
 		}
 		sb.append(String.join(", ", premisePhrase));
 		sb.append("\n").append("then ");

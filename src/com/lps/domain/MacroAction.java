@@ -22,6 +22,9 @@ public class MacroAction extends Graph {
 		for(Fluent f : fluents) {
 			if(f.isModified()) premises.add(f);
 		}
+		for(Condition c : conditions) {
+			if(c.isModified()) premises.add(c);
+		}
 		Collections.sort(premises);
 		
 		int temptime = 1;
@@ -35,9 +38,11 @@ public class MacroAction extends Graph {
 						+ this.name + " is not in a valid form";
 				throw new CellStrMismatchException(message);
 			}
-			if(c.getStartTime() > temptime) 
-				premisePhrase.add("T" + c.getStartTime() + " > T" + temptime);
-			temptime = c.getEndTime();
+			if(c.getStartTime() > 0) {
+				if(c.getStartTime() > temptime) 
+					premisePhrase.add("T" + c.getStartTime() + " > T" + temptime);
+				temptime = c.getEndTime();
+			}
 		}
 		sb.append(name).append(" from T1 to T").append(temptime).append(" if");
 		sb.append("\n    ");
