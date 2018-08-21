@@ -1,6 +1,5 @@
 @charset "UTF-8";
-textarea 
-{
+textarea {
     width: 100%;
     height: 278px;
     padding: 12px 20px;
@@ -10,4 +9,28 @@ textarea
     background-color: #f8f8f8;
     font-size: 16px;
     resize: none;
+}
+
+input[type='text'] {
+	padding: 2px;
+	border: 1px solid #ccc;
+	width: 180px;
+	height: 23px;
+	border-radius:1px;
+	font-size: 16px;
+	font-family: Times New Roman;
+}
+
+select {
+	padding: 2px;
+	border: 1px solid #ccc;
+	width: 180px;
+	height: 30px;
+	border-radius:1px;
+	font-size: 16px;
+	font-family: Times New Roman;
+}
+
+select.boolean {
+	width: 80px
 }

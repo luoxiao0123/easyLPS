@@ -9,6 +9,7 @@
 <link rel="stylesheet" type="text/css" href="navbar.css" />
 <link rel="stylesheet" type="text/css" href="code.css" />
 <link rel="stylesheet" type="text/css" href="dropdown.css" />
+<link rel="stylesheet" type="text/css" href="button.css" />
 </head>
 
 <body>
@@ -37,7 +38,6 @@
 								<ul>
 									<li><a href="#" onclick="save()">Save</a></li>
 									<li><a href="#" onclick="saveAs()">Save As</a></li>
-									<li><a href="#">Download Graph</a></li>
 								</ul>
 							</li>
 							<li><a href="#" onclick="newAction()">New Action</a>
@@ -75,15 +75,17 @@
 						<textarea id="output" placeholder=""></textarea>
 					</div>
 					<div>
-						<div id="tabs">
-							<ul>
-								<li><a href="#tabs-1">Graph to LPS</a></li>
-								<li><a href="#tabs-2">Causal Theory</a></li>
-								<li><a href="#tabs-3">Precondition</a></li>
+						<div id="right_down">
+							<ul id="tabs">
+								<li><a href="#" onclick="show('tabs-1')">Graph to LPS</a></li>
+								<li><a href="#" onclick="show('tabs-2')">Causal Theory</a></li>
+								<li><a href="#" onclick="show('tabs-3')">Precondition</a></li>
 							</ul>
-							<div id="tabs-1">
-								<button onclick="getFinalCode()">get LPS code</button>
-								<button onclick="deleteGraph()">Delete Graph</button>
+							<div id="tabs-1" style="display:block">
+								<div class="tabbar">
+									<button onclick="getFinalCode()">get LPS code</button>
+									<button onclick="deleteGraph()">Delete Graph</button>
+								</div>
 								<table id="wildMatch">
 									<tr>
 										<th>graphs</th>
@@ -99,11 +101,18 @@
 									</tr>
 								</table>
 							</div>
-							<div id="tabs-2">
+							<div id="tabs-2" style="display:block">
+								<div class="tabbar">
+									<button onclick="newCondition()">add condition</button>
+									<button onclick="resetCausalLaw()">reset</button>
+									<button onclick="newCausalLaw()">submit</button>
+									<button onclick="delInputClause('causalStr')">delete</button>
+									<button onclick="CausalLawToLPS()">toLPS</button>
+								</div>
 								<table id="causalTheory">
 									<tr>
 										<th>action</th>
-										<td><input id="action" onkeyup="inputRestrict(this)"
+										<td><input type="text" id="action" onkeyup="inputRestrict(this)"
 													onclick="getAllAction()">
 											<select class="actionSelect" onchange="autoText('action')">
 												<option value="">please select an action</option>
@@ -120,39 +129,36 @@
 									</tr>
 									<tr id="fromto" style="display:none">
 										<th></th>
-										<td><span><input id="from" onkeyup="alnumRestrict(this)"></span>
+										<td><span><input type="text" id="from" onkeyup="alnumRestrict(this)"></span>
 											<span>to</span>
-											<span><input id="to" onkeyup="alnumRestrict(this)"></span>
+											<span><input type="text" id="to" onkeyup="alnumRestrict(this)"></span>
 											<span>in</span>
 										</td>
 									</tr>
 									<tr>
 										<th>fluent</th>
-										<td><input id="fluent" onkeyup="inputRestrict(this)">
+										<td><input type="text" id="fluent" onkeyup="inputRestrict(this)">
 											<select class="fluentSelect" onchange="autoText('fluent')">
 												<option value="">please select a fluent</option>
 										</select></td>
 									</tr>
 								</table>
-								<input type="button" onclick="newCondition()" value="add condition"> 
-								<input type="button" onclick="resetCausalLaw()" value="reset"> 
-								<input type="button" onclick="newCausalLaw()" value="submit">
 								<div id="causalStr"></div>
-								<input type="button" onclick="delInputClause('causalStr')" value="delete"> 
-								<input type="button" onclick="CausalLawToLPS()" value="toLPS">
 							</div>
-							<div id="tabs-3">
+							<div id="tabs-3" style="display:block">
+								<div class="tabbar">
+									<button onclick="addCell('action')">add action</button>
+									<button onclick="addCell('fluent')">add fluent</button>
+									<button onclick="addCell('condition')">add condition</button>
+									<button onclick="resetPrecondition()">reset</button>
+									<button onclick="newPrecondition()">submit</button>
+									<button onclick="delInputClause('preCondStr')">delete</button>
+									<button onclick="preconditionToLPS()">toLPS</button>
+								</div>
 								<p>Please input actions, fluents, and conditions which cannot happen together</p>
 								<table id="precondition">
 								</table>
-								<input type="button" onclick="addCell('action')" value="add action"> 
-								<input type="button" onclick="addCell('fluent')" value="add fluent"> 
-								<input type="button" onclick="addCell('condition')" value="add condition"> 
-								<input type="button" onclick="resetPrecondition()" value="reset"> 
-								<input type="button" onclick="newPrecondition()" value="submit"> 
 								<div id="preCondStr"></div>
-								<input type="button" onclick="delInputClause('preCondStr')" value="delete"> 
-								<input type="button" onclick="preconditionToLPS()" value="toLPS">
 							</div>
 						</div>
 					</div>
@@ -243,9 +249,18 @@
     	}
 	});
 	
-	$(function() {
+	function show(id) {
+		document.getElementById("tabs-1").setAttribute("style", "display:none");
+		document.getElementById("tabs-2").setAttribute("style", "display:none");
+		document.getElementById("tabs-3").setAttribute("style", "display:none");
+		document.getElementById(id).setAttribute("style", "display:block");
+	}
+	
+	show("tabs-1");
+	
+/* 	$(function() {
 	    $('#tabs').tabs();
-	});
+	}); */
 	
 	
 	</script>

@@ -9,11 +9,16 @@ function graphButtonToJson(button) {
 }
 
 function deleteGraph() {
-	var subgraphList = document.getElementsByClassName("selectGraph");
+	var subgraphs = document.getElementById("subgraphs");
+	var subgraphList = subgraphs.getElementsByClassName("selectGraph");
+	var removeList = new Array();
 	$.each(subgraphList, function(i, ele){
 		if(ele.children[1].checked) {
-			ele.parentNode.parentNode.removeChild(ele.parentNode);
+			removeList.push(ele.parentNode);
 		}
+	});
+	$.each(removeList, function(i, ele) {
+		subgraphs.removeChild(ele);
 	});
 }
 
@@ -152,6 +157,7 @@ function newCondition() {
 	var td = document.createElement("TD");
 	td.className = "cond";
 	var select = document.createElement("SELECT");
+	select.className = "boolean";
 	var trueOption = document.createElement("OPTION");
 	trueOption.innerHTML = "";
 	trueOption.value = "";
@@ -159,6 +165,7 @@ function newCondition() {
 	falseOption.innerHTML = "not";
 	falseOption.value = "not ";
 	var input = document.createElement("INPUT");
+	input.setAttribute("type", "text");
 	var del = document.createElement("BUTTON");
 	del.innerHTML = "delete";
 	select.appendChild(trueOption);
@@ -242,10 +249,14 @@ function newCausalLaw() {
 
 function delInputClause(id) {
 	var causal = document.getElementById(id);
+	var removeList = new Array();
 	$.each(causal.children, function(i, ele) {
 		if(ele.firstChild.checked) {
-			causal.removeChild(ele);
+			removeList.push(ele);
 		}
+	});
+	$.each(removeList, function(i, ele) {
+		causal.removeChild(ele);
 	});
 }
 
@@ -259,6 +270,7 @@ function addCell(cellType) {
 	var td = document.createElement("TD");
 	td.className = cellType;
 	var select = document.createElement("SELECT");
+	select.className = "boolean";
 	var trueOption = document.createElement("OPTION");
 	trueOption.innerHTML = "";
 	trueOption.value = "";
@@ -266,6 +278,7 @@ function addCell(cellType) {
 	falseOption.innerHTML = "not";
 	falseOption.value = "not ";
 	var input = document.createElement("INPUT");
+	input.setAttribute("type", "text");
 	var del = document.createElement("BUTTON");
 	del.innerHTML = "delete";
 	select.appendChild(trueOption);
