@@ -1,10 +1,7 @@
 @charset "UTF-8";
-
-* {
-	margin: 0px;
-	padding: 0px;
-}
-
+/* all contents in this file referred to the CSS style in 
+   https://blog.csdn.net/no2015214099/article/details/73196652*/
+   
 #dh {
 	position: relative;
 	margin-top: 0px;
@@ -69,37 +66,6 @@
 	font-weight: 0px;
 }
 
-#dh ul li:hover ul { /*二级菜单的触发点*/
+#dh ul li:hover ul { 
 	display: block;
-}
-
-ul>li {
-  list-style: none;
-}
-a.selectGraph, a.cell {
-  background: darkcyan;
-  color: white;
-  display: block;
-  width: 100px;
-  padding: 10px;
-  text-decoration: none;
-  border-bottom: 1px solid white;
-}
-a.selectGraph input.subgraph {
-  float: right;
-}
-
-#wildMatch {
-    border: 1px solid black;
-    width: 100%;
-    table-layout: fixed;
-}
-
-#wildMatch>ul{
-    text-align: center;
-}
-
-#myholder {
-	z-index: 0;
-/* 	position: relative; */
 }

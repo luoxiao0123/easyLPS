@@ -1,3 +1,10 @@
+/* 
+ * the following code to upload file originated from 
+ * "https://developer.mozilla.org/en-US/docs/Web/API/File/
+ * Using_files_from_web_applications"
+ * 
+ * quote_1 starts
+ */
 window.URL = window.URL || window.webkitURL;
 
 var fileSelect = document.getElementById("fileSelect");
@@ -22,10 +29,30 @@ function handleFiles(files) {
 	}
 }
 
+/*
+ * quote_1 ends
+ */
+
+
+/* 
+ * the following code to download file originated from 
+ * "https://stackoverflow.com/questions/21012580/
+ * is-it-possible-to-write-data-to-file-using-only-javascript"
+ * 
+ * quote_2 starts
+ */
+
 $('#download').on("click", function() {
 	function download() {
+		var name = prompt("Please input the name for the download file,\n" +
+				"only letters and numbers are allowed", "");
+		if(!name.match(/^(\w)+$/)) {
+			alert("only letters and numbers are allowed in the file name,\n" +
+					"please input again");
+			return;
+		}
 		var fileContents = JSON.stringify(pageToJson(), null, 2);
-		var fileName = "data.txt";
+		var fileName = name + ".txt";
 	
 		var ahref = document.createElement('a');
 		ahref.setAttribute('href', 'data:text/plain;charset=utf-8,'
@@ -37,6 +64,12 @@ $('#download').on("click", function() {
 		download()
 	}, 500);
 });
+
+/*
+ * quote_2 ends
+ */
+
+
 
 function pageToJson() {
 	var pageJson = {
@@ -67,6 +100,16 @@ function getGraphJson() {
 			}
 		}
 	});
+	return graphJson;
+}
+
+function graphButtonToJson(button) {
+	var graphJson = {
+		jsonStr: button.getAttribute("jsonstring"),
+		graphType: button.getAttribute("graphtype"),
+		graphName: button.getAttribute("graphname"),
+		graphId: button.getAttribute("graphid")
+	}
 	return graphJson;
 }
 

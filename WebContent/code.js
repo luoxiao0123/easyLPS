@@ -1,13 +1,4 @@
-function graphButtonToJson(button) {
-	var graphJson = {
-		jsonStr: button.getAttribute("jsonstring"),
-		graphType: button.getAttribute("graphtype"),
-		graphName: button.getAttribute("graphname"),
-		graphId: button.getAttribute("graphid")
-	}
-	return graphJson;
-}
-
+// delete the graph button in "graph to LPS" tab
 function deleteGraph() {
 	var subgraphs = document.getElementById("subgraphs");
 	var subgraphList = subgraphs.getElementsByClassName("selectGraph");
@@ -22,61 +13,7 @@ function deleteGraph() {
 	});
 }
 
-function getFinalCode() {
-	var subgraphList = document.getElementsByClassName("selectGraph");
-	if(subgraphList.length == 0) {
-		alert("There is no saved graph!");
-		return;
-	}
-	var graphJson = {
-		initGraph : [],
-		reactGraph : [],
-		macroGraph : []
-	}
-	$.each(subgraphList, function(i, ele){
-		if(ele.children[1].checked) {
-			if(ele.getAttribute("graphType") == "initialize") {
-				graphJson.initGraph.push(graphButtonToJson(ele));
-			}
-			else if(ele.getAttribute("graphType") == "reactiverule") {
-				graphJson.reactGraph.push(graphButtonToJson(ele));
-			}
-			else if(ele.getAttribute("graphType") == "macroaction") {
-				graphJson.macroGraph.push(graphButtonToJson(ele));
-			}
-		}
-	});
-	if(graphJson.initGraph.length > 1) {
-		alert("There can be at most 1 initialization graph!");
-		return;
-	}
-	$.ajax({
-		url : "CompileServlet",
-		type : "post",
-		data : {
-			"graphJson": JSON.stringify(graphJson)
-		},
-		error : function(XMLHttpRequest, textStatus, errorThrown){ 
-			alert(XMLHttpRequest.responseText);
-		},
-		success : function(data) {
-			var jsonData = JSON.parse(data);
-			document.getElementById('output').value = jsonData.code;
-			global.collection.actions = jsonData.actions;
-			global.collection.fluents = jsonData.fluents;
-			global.collection.macros = jsonData.macros;
-			global.collection.actionsWild = jsonData.actionsWild;
-			global.collection.fluentsWild = jsonData.fluentsWild;
-			global.collection.macrosWild = jsonData.macrosWild;
-			demonstrate(global.collection.actionsWild, 
-					global.collection.fluentsWild, global.collection.macrosWild);
-			getAllCells(global.collection.actions, "action");
-			getAllCells(global.collection.fluents, "fluent");
-			autoComplete();
-		}
-	});
-}
-
+// show actions, fluents, and macro actions in table of "graph to LPS"
 function demonstrate(actions, fluents, macros) {
 	demo(actions, "graphactions");
 	demo(fluents, "graphfluents");
@@ -99,6 +36,7 @@ function demo(list, str) {
 	});
 }
 
+// fill the content of dropdown menu of actions and fluents
 function getAllCells(cells, cellType) {
 	var className;
 	if(cellType == "action") className = "actionSelect";
@@ -131,6 +69,7 @@ function autoComplete() {
 	});
 }
 
+// if select menu has a value, copy it to the input
 function autoText(id) {
 	var input = document.getElementById(id);
 	var select = input.parentNode.children[1];
@@ -138,6 +77,8 @@ function autoText(id) {
 	input.value = select.value;
 }
 
+// if the cause is "update", add a line of 
+// "updates _ to _ in fluent" 
 function causeChg() {
 	var cause = document.getElementById("cause");
 	var line = document.getElementById("fromto");
@@ -149,7 +90,7 @@ function causeChg() {
 	}
 }
 
-function newCondition() {
+function addCondition() {
 	var table = document.getElementById("causalTheory");
 	var tr = document.createElement("TR");
 	var th = document.createElement("TH");
@@ -192,11 +133,11 @@ function newCausalLaw() {
 		alert("Please input the action");
 		return;
 	}
-	if(!isValidName(action)) {
+	if(!action.isValidName()) {
 		alert(action + " is not a valid action name");
 		return;
 	}
-	str = str + toStandardForm(action) + " ";
+	str = str + action.toStandardForm() + " ";
 	var cause = document.getElementById("cause").value;
 	if(cause == null || cause == "") {
 		alert("Please select the value of cause");
@@ -218,11 +159,11 @@ function newCausalLaw() {
 		alert("Please input the fluent");
 		return;
 	}
-	if(!isValidName(fluent)) {
+	if(!fluent.isValidName()) {
 		alert(fluent + " is not a valid fluent name");
 		return;
 	}
-	str = str + toStandardForm(fluent);
+	str = str + fluent.toStandardForm();
 	var conds = table.getElementsByClassName("cond");
 	if(conds.length > 0) {
 		var condsArray = new Array();
@@ -239,25 +180,12 @@ function newCausalLaw() {
 	var checkbox = document.createElement("INPUT");
 	checkbox.setAttribute("type", "checkbox");
 	checkbox.setAttribute("checked", "checked");
-	span.setAttribute("action", toStandardForm(action));
-	span.setAttribute("fluent", toStandardForm(fluent));
+	span.setAttribute("action", action.toStandardForm());
+	span.setAttribute("fluent", fluent.toStandardForm());
 	span.innerHTML = str;
 	p.appendChild(checkbox);
 	p.appendChild(span);
 	div.appendChild(p);
-}
-
-function delInputClause(id) {
-	var causal = document.getElementById(id);
-	var removeList = new Array();
-	$.each(causal.children, function(i, ele) {
-		if(ele.firstChild.checked) {
-			removeList.push(ele);
-		}
-	});
-	$.each(removeList, function(i, ele) {
-		causal.removeChild(ele);
-	});
 }
 
 //cellType: "action" "fluent" "condition"
@@ -345,22 +273,22 @@ function newPrecondition() {
 				alert("Please input the action");
 				return;
 			}
-			if(!isValidName(action)) {
+			if(!action.isValidName()) {
 				alert(action + " is not a valid action name");
 				return;
 			}
-			cellArray.push(tr.children[1].children[0].value + toStandardForm(action));
+			cellArray.push(tr.children[1].children[0].value + action.toStandardForm());
 		} else if(tr.firstChild.innerHTML == "fluent") {
 			var fluent = tr.children[1].children[1].value;
 			if(fluent == null || fluent == "") {
 				alert("Please input the fluent");
 				return;
 			}
-			if(!isValidName(fluent)) {
+			if(!fluent.isValidName()) {
 				alert(fluent + " is not a valid fluent name");
 				return;
 			}
-			cellArray.push(tr.children[1].children[0].value + toStandardForm(fluent));
+			cellArray.push(tr.children[1].children[0].value + fluent.toStandardForm());
 		} else if(tr.firstChild.innerHTML == "condition") {
 			var condition = tr.children[1].children[1].value;
 			if(condition == null || condition == "") {
@@ -383,13 +311,6 @@ function newPrecondition() {
 	div.appendChild(p);
 }
 
-function resetPrecondition() {
-	var table = document.getElementById("precondition");
-	while (table.firstChild) {
-	    table.removeChild(table.firstChild);
-	}
-}
-
 function resetCausalLaw() {
 	var table = document.getElementById("causalTheory");
 	var trs = table.getElementsByTagName("tr");
@@ -404,4 +325,25 @@ function resetCausalLaw() {
 	document.getElementById("from").value = "";
 	document.getElementById("to").value = "";
 	document.getElementById("fromto").setAttribute("style", "display:none");
+}
+
+function resetPrecondition() {
+	var table = document.getElementById("precondition");
+	while (table.firstChild) {
+	    table.removeChild(table.firstChild);
+	}
+}
+
+// id: 'causalStr', 'preCondStr'
+function delInputClause(id) {
+	var causal = document.getElementById(id);
+	var removeList = new Array();
+	$.each(causal.children, function(i, ele) {
+		if(ele.firstChild.checked) {
+			removeList.push(ele);
+		}
+	});
+	$.each(removeList, function(i, ele) {
+		causal.removeChild(ele);
+	});
 }

@@ -10,6 +10,7 @@ function macroAction() {
 	graphBase("macroaction");
 }
 
+// create a graph in the left panel
 function graphBase(graphType) {
 	var graph = new joint.dia.Graph;
 	global.graph = graph;
@@ -27,6 +28,7 @@ function graphBase(graphType) {
         interactive: { linkMove: false }
     });
     
+    //draw timeLine in graph
     var timeLine = new Array();
     for(var timeInt = 1; timeInt <= 10; timeInt++){
     	timeLine[timeInt] = new joint.shapes.standard.Link({
@@ -55,22 +57,27 @@ function graphBase(graphType) {
     	timeLine[timeInt].addTo(graph);
     }
     
+    /* 
+     * right click: text mode: insert/update text in the cell
+     *              remove mode: delete cell
+     *              conclude mode: set cell to be part of conclusion
+     */
     paper.on('cell:contextmenu', function(cellView){
     	var mode = document.getElementById("mode").value;
     	if(cellView.model instanceof joint.shapes.standard.Rectangle
     			|| cellView.model instanceof joint.shapes.standard.Polyline) {
     		if(mode === "text") {
     			var cellName = document.getElementById("myText").value;
-    			if(!isValidName(cellName)) {
+    			if(!cellName.isValidName()) {
     				alert(cellName + " is not a valid cell name");
     				return;
     			}
-    			cellView.model.attr('label/text', toStandardForm(cellName));
+    			cellView.model.attr('label/text', cellName.toStandardForm());
     			cellView.model.attr('label/fill', 'white');
     			if(cellView.model instanceof joint.shapes.standard.Rectangle) {
-    				addCellButton("newAction", toStandardForm(cellName));
+    				addCellButton("newAction", cellName.toStandardForm());
     			} else if(cellView.model instanceof joint.shapes.standard.Polyline) {
-    				addCellButton("newFluent", toStandardForm(cellName));
+    				addCellButton("newFluent", cellName.toStandardForm());
     			}
     		} else if(mode === "remove") {
     			cellView.model.remove();
@@ -114,24 +121,25 @@ function graphBase(graphType) {
     
 };
 
-function isValidName(str) {
-	var regex = /^(\s)*[a-z](\w)*(\s)*(\((\s)*(\w)+(\s)*(,(\s)*(\w)+(\s)*)*\))?$/;
-	return str.match(regex);
-}
-
-function toStandardForm(str) {
-	var strNoSpace = str.replace(/\s+/g, '');
-	return strNoSpace.replace(/,/g, ', ');
-}
-
-String.prototype.resetBlank=function() {
-	 return this.replace(/\s+/g, ' '); 
-};
-
 String.prototype.trim = function () { 
 	return this.replace(/(^\s*)|(\s*$)/g, ""); 
 };
 
+String.prototype.isValidName = function() {
+	var regex = /^(\s)*[a-z](\w)*(\s)*(\((\s)*(\w)+(\s)*(,(\s)*(\w)+(\s)*)*\))?$/;
+	return this.match(regex);
+}
+
+String.prototype.toStandardForm = function() {
+	var strNoSpace = this.replace(/\s+/g, '');
+	return strNoSpace.replace(/,/g, ', ');
+}
+
+String.prototype.resetBlank = function() {
+	 return this.replace(/\s+/g, ' '); 
+};
+
+// create a new action in the graph
 function newAction(name) {
 	var action = new joint.shapes.standard.Rectangle();
 	var x = Math.floor(Math.random()*500);
@@ -162,6 +170,7 @@ function newAction(name) {
 	action.addTo(global.graph);
 };
 
+//create a new fluent in the graph
 function newFluent(name) {
 	var fluent = new joint.shapes.standard.Polyline();
 	var x = Math.floor(Math.random()*500);
@@ -192,6 +201,7 @@ function newFluent(name) {
 	fluent.addTo(global.graph);
 };
 
+//create a new condition in the graph
 function newCond(name) {
 	var cond = new joint.shapes.standard.Ellipse();
 	var x = Math.floor(Math.random()*500);
@@ -222,6 +232,8 @@ function newCond(name) {
 	cond.addTo(global.graph);
 };
 
+
+// add button to the dropdown menu above the graph
 function addCellButton(id, cellName) {
 	var className;
 	if(id == "newAction") {
@@ -277,7 +289,7 @@ function saveAs() {
 	}
 	var name = prompt("Please input the name for the " + global.graphType, "");
 	if(name){
-		if(global.graphType == "macroaction" && !isValidName(name)){
+		if(global.graphType == "macroaction" && !name.isValidName()){
 			alert(name + " is not a valid name for a macroaction");
 			return;
 		}
@@ -287,10 +299,10 @@ function saveAs() {
 		var checkbox = document.createElement("INPUT");
 		ahref.href = "#";
 		ahref.className = "selectGraph";
-		span.innerHTML = toStandardForm(name) + "(" + global.graphType.substring(0, 1) + ")";
+		span.innerHTML = name.toStandardForm() + "(" + global.graphType.substring(0, 1) + ")";
 		ahref.setAttribute("jsonstring", JSON.stringify(global.graph.toJSON()));
 		ahref.setAttribute("graphtype", global.graphType);
-		ahref.setAttribute("graphname", toStandardForm(name));
+		ahref.setAttribute("graphname", name.toStandardForm());
 		ahref.setAttribute("graphid", new Date().getTime() + "" + Math.floor(Math.random() * 1000));
 		checkbox.className = "subgraph";
 		checkbox.setAttribute("type", "checkbox");
@@ -312,6 +324,7 @@ function saveAs() {
 	}
 };
 
+// convert a single graph to LPS code
 function getClause() {
 	if(global.currentGraph == null) {
 		alert("Please save the graph first!");

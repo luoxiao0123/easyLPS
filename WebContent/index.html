@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <title>Easy LPS</title>
-<link rel="stylesheet" type="text/css" href="js/joint.css" />
+<link rel="stylesheet" type="text/css" href="css/joint.css" />
 <link rel="stylesheet" type="text/css" href="css/jquery.splitter.css" />
 <link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
-<link rel="stylesheet" type="text/css" href="navbar.css" />
 <link rel="stylesheet" type="text/css" href="code.css" />
+<link rel="stylesheet" type="text/css" href="navbar.css" />
 <link rel="stylesheet" type="text/css" href="dropdown.css" />
 <link rel="stylesheet" type="text/css" href="button.css" />
 </head>
@@ -83,7 +83,6 @@
 							</ul>
 							<div id="tabs-1" style="display:block">
 								<div class="tabbar">
-									<button onclick="getFinalCode()">get LPS code</button>
 									<button onclick="deleteGraph()">Delete Graph</button>
 								</div>
 								<table id="wildMatch">
@@ -101,13 +100,12 @@
 									</tr>
 								</table>
 							</div>
-							<div id="tabs-2" style="display:block">
+							<div id="tabs-2" style="display:none">
 								<div class="tabbar">
-									<button onclick="newCondition()">add condition</button>
+									<button onclick="addCondition()">add condition</button>
 									<button onclick="resetCausalLaw()">reset</button>
 									<button onclick="newCausalLaw()">submit</button>
 									<button onclick="delInputClause('causalStr')">delete</button>
-									<button onclick="CausalLawToLPS()">toLPS</button>
 								</div>
 								<table id="causalTheory">
 									<tr>
@@ -145,7 +143,7 @@
 								</table>
 								<div id="causalStr"></div>
 							</div>
-							<div id="tabs-3" style="display:block">
+							<div id="tabs-3" style="display:none">
 								<div class="tabbar">
 									<button onclick="addCell('action')">add action</button>
 									<button onclick="addCell('fluent')">add fluent</button>
@@ -153,7 +151,6 @@
 									<button onclick="resetPrecondition()">reset</button>
 									<button onclick="newPrecondition()">submit</button>
 									<button onclick="delInputClause('preCondStr')">delete</button>
-									<button onclick="preconditionToLPS()">toLPS</button>
 								</div>
 								<p>Please input actions, fluents, and conditions which cannot happen together</p>
 								<table id="precondition">
@@ -189,6 +186,7 @@
 				actions: [],
 				fluents: [],
 				macros: [],
+				conditions: [],
 				actionsWild: [],
 				fluentsWild: [],
 				macrosWild: []
@@ -256,12 +254,6 @@
 		document.getElementById("tabs-3").setAttribute("style", "display:none");
 		document.getElementById(id).setAttribute("style", "display:block");
 	}
-	
-	show("tabs-1");
-	
-/* 	$(function() {
-	    $('#tabs').tabs();
-	}); */
 	
 	
 	</script>

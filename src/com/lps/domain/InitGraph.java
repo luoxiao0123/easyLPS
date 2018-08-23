@@ -44,7 +44,7 @@ public class InitGraph extends Graph {
 			sb.append("initially ").append(String.join(", ", fluentStr)).append(".\n");
 		}
 		for(Condition c : conditions) {
-			sb.append(c.getInitPhrase());
+			sb.append(c.getInitPhrase()).append("\n");
 		}
 		return sb.toString();
 	}

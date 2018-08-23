@@ -1,5 +1,7 @@
 @charset "UTF-8";
-
+/* all contents in this file referred to the CSS style in 
+   https://www.w3schools.com/howto/howto_css_fixed_menu.asp*/
+   
 /* The navigation bar */
 #navbar {
     overflow: hidden;
