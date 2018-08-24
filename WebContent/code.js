@@ -41,6 +41,7 @@ function getAllCells(cells, cellType) {
 	var className;
 	if(cellType == "action") className = "actionSelect";
 	else if(cellType == "fluent") className = "fluentSelect";
+	else if(cellType == "condition") className = "condSelect";
 	else return;
 	var nodes = document.getElementsByClassName(className);
 	$.each(nodes, function(i, node) {
@@ -96,7 +97,7 @@ function addCondition() {
 	var th = document.createElement("TH");
 	th.innerHTML = "condition";
 	var td = document.createElement("TD");
-	td.className = "cond";
+	td.className = "condition";
 	var select = document.createElement("SELECT");
 	select.className = "boolean";
 	var trueOption = document.createElement("OPTION");
@@ -107,12 +108,19 @@ function addCondition() {
 	falseOption.value = "not ";
 	var input = document.createElement("INPUT");
 	input.setAttribute("type", "text");
+	var condSelect = document.createElement("SELECT");
+	condSelect.className = "condSelect";
+	var option = document.createElement("OPTION");
+	option.innerHTML = "please select a condition";
+	option.value = "";
 	var del = document.createElement("BUTTON");
 	del.innerHTML = "delete";
+	condSelect.appendChild(option);
 	select.appendChild(trueOption);
 	select.appendChild(falseOption);
 	td.appendChild(select);
 	td.appendChild(input);
+	td.appendChild(condSelect);
 	td.appendChild(del);
 	tr.appendChild(th);
 	tr.appendChild(td);
@@ -123,6 +131,17 @@ function addCondition() {
 	del.onclick = function() {
 		this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode);
 	}
+	condSelect.onchange = function() {
+		var inp = this.parentNode.children[1];
+		if(this.value == null || this.value == "") return;
+		inp.value = this.value;
+	}
+	$(function() {
+	    $("#causalTheory .condition>input").autocomplete({
+	    	source: global.collection.conditions
+	    });
+	});
+	getAllCells(global.collection.conditions, "condition");
 }
 
 function newCausalLaw() {
@@ -164,14 +183,16 @@ function newCausalLaw() {
 		return;
 	}
 	str = str + fluent.toStandardForm();
-	var conds = table.getElementsByClassName("cond");
+	var conds = table.getElementsByClassName("condition");
+	var condArray = [];
 	if(conds.length > 0) {
-		var condsArray = new Array();
+		var condsStr = new Array();
 		$.each(conds, function(i, ele) {
-			condsArray.push(" " + ele.children[0].value + 
+			condsStr.push(" " + ele.children[0].value + 
 					ele.children[1].value.trim().resetBlank());
+			condArray.push(ele.children[1].value.trim().resetBlank());
 		});
-		str = str + " if" + condsArray.join(",");
+		str = str + " if" + condsStr.join(",");
 	}
 	str = str + ".";
 	var div = document.getElementById("causalStr");
@@ -182,6 +203,7 @@ function newCausalLaw() {
 	checkbox.setAttribute("checked", "checked");
 	span.setAttribute("action", action.toStandardForm());
 	span.setAttribute("fluent", fluent.toStandardForm());
+	span.setAttribute("condition", JSON.stringify(condArray));
 	span.innerHTML = str;
 	p.appendChild(checkbox);
 	p.appendChild(span);
@@ -207,12 +229,18 @@ function addCell(cellType) {
 	falseOption.value = "not ";
 	var input = document.createElement("INPUT");
 	input.setAttribute("type", "text");
+	var cellSelect = document.createElement("SELECT");
+	var option = document.createElement("OPTION");
+	option.value = "";
 	var del = document.createElement("BUTTON");
 	del.innerHTML = "delete";
+	cellSelect.appendChild(option);
 	select.appendChild(trueOption);
 	select.appendChild(falseOption);
 	td.appendChild(select);
 	td.appendChild(input);
+	td.appendChild(cellSelect);
+	td.appendChild(del);
 	tr.appendChild(th);
 	tr.appendChild(td);
 	table.appendChild(tr);
@@ -221,46 +249,48 @@ function addCell(cellType) {
 	}
 	del.onclick = function() {
 		this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode);
+	}		
+	cellSelect.onchange = function() {
+		var inp = this.parentNode.children[1];
+		if(this.value == null || this.value == "") return;
+		inp.value = this.value;
 	}
-	if(cellType == "condition") {
-		td.appendChild(del);
-	} else {
-		var cellSelect = document.createElement("SELECT");
-		var option = document.createElement("OPTION");
-		option.value = "";
-		cellSelect.appendChild(option);
-		td.appendChild(cellSelect);
-		td.appendChild(del);
-		cellSelect.onchange = function() {
-			var inp = this.parentNode.children[1];
-			if(this.value == null || this.value == "") return;
-			inp.value = this.value;
-		}
-		if(cellType == "action") {
-			cellSelect.className = "actionSelect";
-			option.innerHTML = "please select an action";
-			$(function() {
-			    $("#precondition .action>input").autocomplete({
-			    	source: global.collection.actions
-			    });
-			});
-			getAllCells(global.collection.actions, "action");
-		} else if(cellType == "fluent") {
-			cellSelect.className = "fluentSelect";
-			option.innerHTML = "please select a fluent";
-			$(function() {
-			    $("#precondition .fluent>input").autocomplete({
-			    	source: global.collection.fluents
-			    });
-			});
-			getAllCells(global.collection.fluents, "fluent");
-		}
+	if(cellType == "action") {
+		cellSelect.className = "actionSelect";
+		option.innerHTML = "please select an action";
+		$(function() {
+		    $("#precondition .action>input").autocomplete({
+		    	source: global.collection.actions
+		    });
+		});
+		getAllCells(global.collection.actions, "action");
+	} else if(cellType == "fluent") {
+		cellSelect.className = "fluentSelect";
+		option.innerHTML = "please select a fluent";
+		$(function() {
+		    $("#precondition .fluent>input").autocomplete({
+		    	source: global.collection.fluents
+		    });
+		});
+		getAllCells(global.collection.fluents, "fluent");
+	} else if(cellType == "condition") {
+		cellSelect.className = "condSelect";
+		option.innerHTML = "please select a condition";
+		$(function() {
+		    $("#precondition .condition>input").autocomplete({
+		    	source: global.collection.conditions
+		    });
+		});
+		getAllCells(global.collection.conditions, "condition");
 	}
 }
 
 function newPrecondition() {
 	var table = document.getElementById("precondition");
 	var cellArray = new Array();
+	var actionArray = [];
+	var fluentArray = [];
+	var condArray = [];
 	var trs = table.children;
 	if(trs.length < 1) {
 		alert("Please add a clause to the precondition");
@@ -278,6 +308,7 @@ function newPrecondition() {
 				return;
 			}
 			cellArray.push(tr.children[1].children[0].value + action.toStandardForm());
+			actionArray.push(action.toStandardForm());
 		} else if(tr.firstChild.innerHTML == "fluent") {
 			var fluent = tr.children[1].children[1].value;
 			if(fluent == null || fluent == "") {
@@ -289,6 +320,7 @@ function newPrecondition() {
 				return;
 			}
 			cellArray.push(tr.children[1].children[0].value + fluent.toStandardForm());
+			fluentArray.push(fluent.toStandardForm());
 		} else if(tr.firstChild.innerHTML == "condition") {
 			var condition = tr.children[1].children[1].value;
 			if(condition == null || condition == "") {
@@ -296,6 +328,7 @@ function newPrecondition() {
 				return;
 			}
 			cellArray.push(tr.children[1].children[0].value + condition.trim().resetBlank());
+			condArray.push(condition.trim().resetBlank());
 		}
 	});
 	var str = "false " + cellArray.join(", ") + ".";
@@ -306,6 +339,9 @@ function newPrecondition() {
 	checkbox.setAttribute("type", "checkbox");
 	checkbox.setAttribute("checked", "checked");
 	span.innerHTML = str;
+	span.setAttribute("action", JSON.stringify(actionArray));
+	span.setAttribute("fluent", JSON.stringify(fluentArray));
+	span.setAttribute("condition", JSON.stringify(condArray));
 	p.appendChild(checkbox);
 	p.appendChild(span);
 	div.appendChild(p);

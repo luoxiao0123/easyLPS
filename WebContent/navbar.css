@@ -60,3 +60,25 @@
     background: #ddd;
     color: black;
 }
+
+#right_bar {
+    overflow: hidden;
+    background-color: #808000;
+    height: 40px;
+}
+
+#right_bar a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 12px 8px;
+    text-decoration: none;
+    width: 120px;
+    height: 16px;
+}
+
+#right_bar a:hover {
+    background: #ddd;
+    color: black;
+}

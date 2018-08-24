@@ -120,11 +120,13 @@ function getCausalJson() {
 	$.each(causalList, function(i, ele) {
 		if(ele.firstChild.checked) {
 			var span = ele.children[1];
-			arr.push({
+			var causalJson = {
 				text: span.innerHTML,
 				action: span.getAttribute("action"),
-				fluent: span.getAttribute("fluent")
-				});
+				fluent: span.getAttribute("fluent"),
+				condition: JSON.parse(span.getAttribute("condition"))
+				}
+			arr.push(causalJson);
 		}
 	});
 	return arr;
@@ -138,7 +140,10 @@ function getprecondJson() {
 		if(ele.firstChild.checked) {
 			var span = ele.children[1];
 			arr.push({
-				text: span.innerHTML
+				text: span.innerHTML,
+				action: JSON.parse(span.getAttribute("action")),
+				fluent: JSON.parse(span.getAttribute("fluent")),
+				condition: JSON.parse(span.getAttribute("condition"))
 				});
 		}
 	});
@@ -224,6 +229,7 @@ function jsonDataToCausal(data) {
 		checkbox.setAttribute("checked", "checked");
 		span.setAttribute("action", ele.action);
 		span.setAttribute("fluent", ele.fluent);
+		span.setAttribute("condition", JSON.stringify(ele.condition));
 		span.innerHTML = ele.text;
 		p.appendChild(checkbox);
 		p.appendChild(span);
@@ -239,6 +245,9 @@ function jsonDataToPrecond(data) {
 		var checkbox = document.createElement("INPUT");
 		checkbox.setAttribute("type", "checkbox");
 		checkbox.setAttribute("checked", "checked");
+		span.setAttribute("action", JSON.stringify(ele.action));
+		span.setAttribute("fluent", JSON.stringify(ele.fluent));
+		span.setAttribute("condition", JSON.stringify(ele.condition));
 		span.innerHTML = ele.text;
 		p.appendChild(checkbox);
 		p.appendChild(span);

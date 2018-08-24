@@ -23,6 +23,7 @@ public class Page {
 	private Set<String> actions_std;
 	private Set<String> fluents_std;
 	private Set<String> macros_std;
+	private Set<String> conditions_std;
 	private Set<String> actions_wild;
 	private Set<String> fluents_wild;
 	private Set<String> macros_wild;
@@ -36,12 +37,13 @@ public class Page {
 		actions_std = new HashSet<String>();
 		fluents_std = new HashSet<String>();
 		macros_std = new HashSet<String>();
+		conditions_std = new HashSet<String>();
 		actions_wild = new HashSet<String>();
 		fluents_wild = new HashSet<String>();
 		macros_wild = new HashSet<String>();
 	}
 	
-	
+	// convert json string into Page Object
 	public boolean populate(String jsonString) throws CellStrMismatchException {
 		JSONObject pageJson = JSONObject.fromObject(jsonString);
 		JSONObject graphJson = pageJson.getJSONObject("graphJson");
@@ -79,19 +81,16 @@ public class Page {
 		}
 		for(int i = 0; i < causalArray.size(); i++) {
 			JSONObject causalObj = causalArray.getJSONObject(i);
-			String text = causalObj.getString("text");
-			String causalAction = causalObj.getString("action");
-			String causalFluent = causalObj.getString("fluent");
-			causalTheorys.add(text);
-			getActionAndFluent(causalAction, causalFluent, text);
+			doCausalTheory(causalObj);
 		}
 		for(int i = 0; i < precondArray.size(); i++) {
 			JSONObject precondObj = precondArray.getJSONObject(i);
-			preconditions.add(precondObj.getString("text"));
+			doPrecondition(precondObj);
 		}
 		return true;
 	}
 	
+	// store the name and wild match name of Cell in the sets
 	private void getActionAndFluent(Graph graph) throws CellStrMismatchException {
 		for(Action a : graph.getActions()) {
 			try {
@@ -125,10 +124,19 @@ public class Page {
 		}
 		actions_std.removeAll(macros_std);
 		actions_wild.removeAll(macros_wild);
+		for(Condition c : graph.getConditions()) {
+			conditions_std.add(c.getText());
+		}
 	}
 	
-	private void getActionAndFluent(String action, String fluent, String text)
+	private void doCausalTheory(JSONObject causalObj)
 			throws CellStrMismatchException {
+		String text = causalObj.getString("text");
+		String action = causalObj.getString("action");
+		String fluent = causalObj.getString("fluent");
+		JSONArray conditions = causalObj.getJSONArray("condition");
+		
+		causalTheorys.add(text);
 		try {
 			actions_std.add(CellUtils.toStandardForm(action));
 			actions_wild.add(CellUtils.toWildMatch(action));
@@ -144,6 +152,44 @@ public class Page {
 			String message = "fluent " + fluent + " in causal theory\n"
 					+ text + "\n is not in a valid form";
 			throw new CellStrMismatchException(message);
+		}
+		for(int i = 0; i < conditions.size(); i++) {
+			conditions_std.add(conditions.getString(i));
+		}
+	}
+	
+	private void doPrecondition(JSONObject precondObj)
+			throws CellStrMismatchException {
+		String text = precondObj.getString("text");
+		JSONArray actions = precondObj.getJSONArray("action");
+		JSONArray fluents = precondObj.getJSONArray("fluent");
+		JSONArray conditions = precondObj.getJSONArray("condition");
+		
+		preconditions.add(text);
+		for(int i = 0; i < actions.size(); i++) {
+			String action = actions.getString(i);
+			try {
+				actions_std.add(CellUtils.toStandardForm(action));
+				actions_wild.add(CellUtils.toWildMatch(action));
+			} catch(CellStrMismatchException e) {
+				String message = "action " + action + " in precondition\n"
+						+ text + "\n is not in a valid form";
+				throw new CellStrMismatchException(message);
+			}
+		}
+		for(int i = 0; i < fluents.size(); i++) {
+			String fluent = fluents.getString(i);
+			try {
+				fluents_std.add(CellUtils.toStandardForm(fluent));
+				fluents_wild.add(CellUtils.toWildMatch(fluent));
+			} catch (CellStrMismatchException e) {
+				String message = "fluent " + fluent + " in causal theory\n"
+						+ text + "\n is not in a valid form";
+				throw new CellStrMismatchException(message);
+			}
+		}
+		for(int i = 0; i < conditions.size(); i++) {
+			conditions_std.add(conditions.getString(i));
 		}
 	}
 	
@@ -218,12 +264,15 @@ public class Page {
 		Set<String> actions = new HashSet<String>();
 		Set<String> fluents = new HashSet<String>();
 		Set<String> macros = new HashSet<String>();
+		Set<String> conditions = new HashSet<String>();
 		actions.addAll(actions_std);
 		actions.addAll(actions_wild);
 		fluents.addAll(fluents_std);
 		fluents.addAll(fluents_wild);
 		macros.addAll(macros_std);
 		macros.addAll(macros_wild);
+		conditions.addAll(conditions_std);
+		conditions.addAll(fluents_wild);
 		
 		jsonObject.put("code", getString());
 		JSONArray actionArray = JSONArray.fromObject(actions);
@@ -232,6 +281,8 @@ public class Page {
 		jsonObject.put("fluents", fluentArray);
 		JSONArray macroArray = JSONArray.fromObject(macros);
 		jsonObject.put("macros", macroArray);
+		JSONArray conditionArray = JSONArray.fromObject(conditions);
+		jsonObject.put("conditions", conditionArray);
 		JSONArray actionArray_wild = JSONArray.fromObject(actions_wild);
 		jsonObject.put("actionsWild", actionArray_wild);
 		JSONArray fluentArray_wild = JSONArray.fromObject(fluents_wild);

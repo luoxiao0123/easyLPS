@@ -21,7 +21,9 @@ public abstract class Cell implements Comparable<Cell> {
 	
 	public abstract int getStartTime();
 	public abstract int getEndTime();
+	// get the phrase for cell in initialization graph
 	public abstract String getInitPhrase() throws CellStrMismatchException;
+	// get the phrase for cell in reactive rule or macroaction graph
 	public abstract String getPhrase() throws CellStrMismatchException;
 
 	public String getText() {

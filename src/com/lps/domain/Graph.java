@@ -26,6 +26,7 @@ public abstract class Graph {
 		this.id = id;
 	}
 	
+	// convert json string for graph into Graph Object
 	public boolean populate(String jsonString) {
 		JSONObject jsonObject = JSONObject.fromObject(jsonString);
 		JSONArray cells = jsonObject.getJSONArray("cells");
@@ -60,6 +61,7 @@ public abstract class Graph {
 		return true;
 	}
 	
+	// get the LPS clause for the graph
 	public abstract String getString() throws 
 	CellStrMismatchException, NoConclusionException, RevCausalException;
 
@@ -69,6 +71,10 @@ public abstract class Graph {
 
 	public List<Fluent> getFluents() {
 		return fluents;
+	}
+	
+	public List<Condition> getConditions() {
+		return conditions;
 	}
 
 	public String getName() {
