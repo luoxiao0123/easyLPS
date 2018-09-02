@@ -5,7 +5,7 @@ public class RevCausalException extends Exception {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 12L;
+	private static final long serialVersionUID = 13L;
 
 	public RevCausalException() {
 		// TODO Auto-generated constructor stub

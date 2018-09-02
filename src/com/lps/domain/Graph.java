@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.lps.exception.CellStrMismatchException;
 import com.lps.exception.NoConclusionException;
+import com.lps.exception.NoPremiseException;
 import com.lps.exception.RevCausalException;
 import com.lps.utils.CellUtils;
 
@@ -63,7 +64,8 @@ public abstract class Graph {
 	
 	// get the LPS clause for the graph
 	public abstract String getString() throws 
-	CellStrMismatchException, NoConclusionException, RevCausalException;
+	CellStrMismatchException, NoConclusionException,
+	RevCausalException, NoPremiseException;
 
 	public List<Action> getActions() {
 		return actions;

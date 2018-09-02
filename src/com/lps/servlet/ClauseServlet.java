@@ -12,6 +12,7 @@ import com.lps.domain.MacroAction;
 import com.lps.domain.ReactiveRule;
 import com.lps.exception.CellStrMismatchException;
 import com.lps.exception.NoConclusionException;
+import com.lps.exception.NoPremiseException;
 import com.lps.exception.RevCausalException;
 
 /**
@@ -56,7 +57,7 @@ public class ClauseServlet extends HttpServlet {
 			try {
 				String str = reactiveRule.getString();
 				response.getWriter().write(str);
-			} catch (CellStrMismatchException | NoConclusionException | RevCausalException e) {
+			} catch (CellStrMismatchException | NoConclusionException | RevCausalException | NoPremiseException e) {
 				response.setStatus(400);
 				response.getWriter().write(e.getMessage());
 			}
@@ -66,7 +67,7 @@ public class ClauseServlet extends HttpServlet {
 			try {
 				String str = macroAction.getString();
 				response.getWriter().write(str);
-			} catch (CellStrMismatchException e) {
+			} catch (CellStrMismatchException | NoPremiseException e) {
 				response.setStatus(400);
 				response.getWriter().write(e.getMessage());
 			}

@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.lps.exception.CellStrMismatchException;
 import com.lps.exception.NoConclusionException;
+import com.lps.exception.NoPremiseException;
 import com.lps.exception.RevCausalException;
 
 public class ReactiveRule extends Graph {
@@ -16,7 +17,7 @@ public class ReactiveRule extends Graph {
 
 	@Override
 	public String getString() throws CellStrMismatchException, 
-	NoConclusionException, RevCausalException {
+	NoConclusionException, RevCausalException, NoPremiseException {
 		List<Cell> premises = new ArrayList<Cell>();
 		List<Cell> conclusions = new ArrayList<Cell>();
 		for(Action a : actions) {
@@ -33,6 +34,11 @@ public class ReactiveRule extends Graph {
 				if(c.isConclusion()) conclusions.add(c);
 				else premises.add(c);
 			}
+		}
+		if(premises.size() == 0) {
+			String message = "ReactiveRule " + this.name + " does not have"
+					+ " a premise";
+			throw new NoPremiseException(message);
 		}
 		if(conclusions.size() == 0) {
 			String message = "ReactiveRule " + this.name + " does not have"

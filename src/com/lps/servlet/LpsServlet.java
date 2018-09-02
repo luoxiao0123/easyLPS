@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.lps.domain.Page;
 import com.lps.exception.CellStrMismatchException;
 import com.lps.exception.NoConclusionException;
+import com.lps.exception.NoPremiseException;
 import com.lps.exception.RevCausalException;
 
 /**
@@ -38,7 +39,7 @@ public class LpsServlet extends HttpServlet {
 		try {
 			page.populate(pageJson);
 			response.getWriter().write(page.toJSONObject().toString());
-		} catch (CellStrMismatchException | NoConclusionException | RevCausalException e) {
+		} catch (CellStrMismatchException | NoConclusionException | RevCausalException | NoPremiseException e) {
 			response.setStatus(400);
 			response.getWriter().write(e.getMessage());
 		}

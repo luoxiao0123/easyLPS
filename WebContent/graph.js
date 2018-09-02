@@ -126,7 +126,7 @@ String.prototype.trim = function () {
 };
 
 String.prototype.isValidName = function() {
-	var regex = /^(\s)*[a-z](\w)*(\s)*(\((\s)*(\w)+(\s)*(,(\s)*(\w)+(\s)*)*\))?$/;
+	var regex = /^(\s)*[a-z](\w)*(\s)*(\((\s)*(\w)+(\s)*(,(\s)*(\w)+(\s)*)*\))?(\s)*$/;
 	return this.match(regex);
 }
 

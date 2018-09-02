@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.lps.exception.CellStrMismatchException;
 import com.lps.exception.NoConclusionException;
+import com.lps.exception.NoPremiseException;
 import com.lps.exception.RevCausalException;
 import com.lps.utils.CellUtils;
 
@@ -217,7 +218,8 @@ public class Page {
 	}
 	
 	private JSONObject graphToJson(Graph graph) 
-			throws CellStrMismatchException, NoConclusionException, RevCausalException {
+			throws CellStrMismatchException, NoConclusionException,
+			RevCausalException, NoPremiseException {
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("id", graph.getId());
 		jsonObject.put("text", graph.getString());
@@ -225,7 +227,7 @@ public class Page {
 	}
 	
 	public String getString() throws CellStrMismatchException, 
-	NoConclusionException, RevCausalException {
+	NoConclusionException, RevCausalException, NoPremiseException {
 		StringBuffer sb = new StringBuffer();
 		sb.append(getHeader());
 		for(InitGraph initGraph : initGraphs) {
@@ -243,7 +245,7 @@ public class Page {
 	}
 	
 	public JSONObject toJSONObject() throws CellStrMismatchException, 
-	NoConclusionException, RevCausalException {
+	NoConclusionException, RevCausalException, NoPremiseException {
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("header", getHeader());
 		List<JSONObject> graphJson = new LinkedList<JSONObject>();

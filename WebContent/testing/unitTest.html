@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>QUnit Testing</title>
+  <link rel="stylesheet" href="../css/qunit.css">
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+  <script src="../js/qunit.js"></script>
+  <!-- the above code is derived from the official web page of qunit
+     https://qunitjs.com -->
+  
+  <script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/jquery.splitter.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/jquery-ui.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/lodash.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/backbone.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/joint.js" type="text/javascript" charset="utf-8"></script>
+  <script src="graph.js" type="text/javascript" charset="utf-8"></script>
+  <script src="code.js" type="text/javascript" charset="utf-8"></script>
+  <script src="file.js" type="text/javascript" charset="utf-8"></script>
+  <script src="lps.js" type="text/javascript" charset="utf-8"></script>
+  <script type="text/javascript">
+	var global = {
+			graph: null,
+			graphType: null,
+			currentGraph: null,
+			mode: 'normal',
+			collection: {
+				actions: [],
+				fluents: [],
+				macros: [],
+				conditions: [],
+				actionsWild: [],
+				fluentsWild: [],
+				macrosWild: []
+			}
+	}
+	
+	function inputRestrict(obj) {
+		var regex = obj.value.replace(/[^\a-\z\A-\Z0-9\(\)\,\_\ ]/g,'');
+		if(obj.value != regex) {
+			obj.value = regex;
+		}
+	}
+	
+	function numRestrict(obj) {
+		var regex = obj.value.replace(/[^0-9]/g,'');
+		if(obj.value != regex) {
+			obj.value = regex;
+		}
+	}
+	
+	function alnumRestrict(obj) {
+		var regex = obj.value.replace(/[^\a-\z\A-\Z0-9\_]/g,'');
+		if(obj.value != regex) {
+			obj.value = regex;
+		}
+	}
+	
+	function condRestrict(obj) {
+		var regex = obj.value.replace(/[^\a-\z\A-\Z0-9\(\)\,\_\ \@\<\>\=\+\-\*\/\\]/g,'');
+		if(obj.value != regex) {
+			obj.value = regex;
+		}
+	}
+	
+	function show(id) {
+		document.getElementById("tabs-1").setAttribute("style", "display:none");
+		document.getElementById("tabs-2").setAttribute("style", "display:none");
+		document.getElementById("tabs-3").setAttribute("style", "display:none");
+		document.getElementById(id).setAttribute("style", "display:block");
+	}
+	
+	function showTextedit() {
+		document.getElementById("textselect").setAttribute("style", "display:none");
+		document.getElementById("textedit").setAttribute("style", "display:block");
+	}
+	
+	function showTextselect() {
+		document.getElementById("textedit").setAttribute("style", "display:none");
+		document.getElementById("textselect").setAttribute("style", "display:block");
+	}
+	
+	
+	</script>
+  <script src="unitTest.js"></script>
+</body>
+</html>

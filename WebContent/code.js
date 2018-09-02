@@ -296,16 +296,19 @@ function newPrecondition() {
 		alert("Please add a clause to the precondition");
 		return;
 	}
+	var flag = false;
 	$.each(trs, function(i, tr) {
 		if(tr.firstChild.innerHTML == "action") {
 			var action = tr.children[1].children[1].value;
 			if(action == null || action == "") {
 				alert("Please input the action");
-				return;
+				flag = true;
+				return false;
 			}
 			if(!action.isValidName()) {
 				alert(action + " is not a valid action name");
-				return;
+				flag = true;
+				return false;
 			}
 			cellArray.push(tr.children[1].children[0].value + action.toStandardForm());
 			actionArray.push(action.toStandardForm());
@@ -313,11 +316,13 @@ function newPrecondition() {
 			var fluent = tr.children[1].children[1].value;
 			if(fluent == null || fluent == "") {
 				alert("Please input the fluent");
-				return;
+				flag = true;
+				return false;
 			}
 			if(!fluent.isValidName()) {
 				alert(fluent + " is not a valid fluent name");
-				return;
+				flag = true;
+				return false;
 			}
 			cellArray.push(tr.children[1].children[0].value + fluent.toStandardForm());
 			fluentArray.push(fluent.toStandardForm());
@@ -325,12 +330,14 @@ function newPrecondition() {
 			var condition = tr.children[1].children[1].value;
 			if(condition == null || condition == "") {
 				alert("Please input the value of condition");
-				return;
+				flag = true;
+				return false;
 			}
 			cellArray.push(tr.children[1].children[0].value + condition.trim().resetBlank());
 			condArray.push(condition.trim().resetBlank());
 		}
 	});
+	if(flag) return;
 	var str = "false " + cellArray.join(", ") + ".";
 	var div = document.getElementById("preCondStr");
 	var p = document.createElement("P");
