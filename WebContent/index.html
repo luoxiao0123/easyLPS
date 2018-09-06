@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <title>Easy LPS</title>
 <link rel="stylesheet" type="text/css" href="css/joint.css" />
-<link rel="stylesheet" type="text/css" href="css/jquery.splitter.css" />
 <link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
 <link rel="stylesheet" type="text/css" href="code.css" />
 <link rel="stylesheet" type="text/css" href="navbar.css" />
+<link rel="stylesheet" type="text/css" href="split.css" />
 <link rel="stylesheet" type="text/css" href="dropdown.css" />
 <link rel="stylesheet" type="text/css" href="button.css" />
 </head>
@@ -25,7 +25,7 @@
 		</div>
 		<div id="content" class="container">
 			<div id="splitter_panel">
-				<div id="left_panel" style="width: 618px;">
+				<div id="left_panel">
 					<div id="dh">
 						<ul>
 							<li><a href="#">Graph</a>
@@ -55,7 +55,7 @@
 							<li><a href="#" onclick="getClause()">Get Clause</a></li>
 						</ul>
 					</div>
-					<div>
+					<div id="left_input">
 						<span>
 							<input type="text" id="myText" value="" onkeyup="condRestrict(this)">
 						</span>
@@ -70,7 +70,7 @@
 					</div>
 					<div id="myholder"></div>
 				</div>
-				<div id="right_panel" style="width: 618px;">
+				<div id="right_panel">
 					<div id="right_up">
 						<ul id="right_bar">
 							<li><a href="#" onclick="showTextedit()">Edit</a></li>
@@ -94,20 +94,22 @@
 							<div class="tabbar">
 								<button onclick="deleteGraph()">Delete Graph</button>
 							</div>
-							<table id="wildMatch">
-								<tr>
-									<th>graphs</th>
-									<th>actions</th>
-									<th>fluents</th>
-									<th>macros</th>
-								</tr>
-								<tr>
-									<td><ul id="subgraphs"></ul></td>
-									<td><ul id="graphactions"></ul></td>
-									<td><ul id="graphfluents"></ul></td>
-									<td><ul id="graphmacros"></ul></td>
-								</tr>
-							</table>
+							<div class="rest">
+								<table id="wildMatch">
+									<tr>
+										<th>graphs</th>
+										<th>actions</th>
+										<th>fluents</th>
+										<th>macros</th>
+									</tr>
+									<tr>
+										<td><ul id="subgraphs"></ul></td>
+										<td><ul id="graphactions"></ul></td>
+										<td><ul id="graphfluents"></ul></td>
+										<td><ul id="graphmacros"></ul></td>
+									</tr>
+								</table>
+							</div>
 						</div>
 						<div id="tabs-2" style="display:none">
 							<div class="tabbar">
@@ -116,41 +118,43 @@
 								<button onclick="newCausalLaw()">submit</button>
 								<button onclick="delInputClause('causalStr')">delete</button>
 							</div>
-							<table id="causalTheory">
-								<tr>
-									<th>action</th>
-									<td><input type="text" id="action" onkeyup="inputRestrict(this)"
-												onclick="getAllAction()">
-										<select class="actionSelect" onchange="autoText('action')">
-											<option value="">please select an action</option>
-									</select></td>
-								</tr>
-								<tr>
-									<th>cause</th>
-									<td><select id="cause" onchange="causeChg()">
-											<option value="">please select</option>
-											<option value="initiates">initiates</option>
-											<option value="terminates">terminates</option>
-											<option value="updates">updates</option>
-									</select></td>
-								</tr>
-								<tr id="fromto" style="display:none">
-									<th></th>
-									<td><span><input type="text" id="from" onkeyup="alnumRestrict(this)"></span>
-										<span>to</span>
-										<span><input type="text" id="to" onkeyup="alnumRestrict(this)"></span>
-										<span>in</span>
-									</td>
-								</tr>
-								<tr>
-									<th>fluent</th>
-									<td><input type="text" id="fluent" onkeyup="inputRestrict(this)">
-										<select class="fluentSelect" onchange="autoText('fluent')">
-											<option value="">please select a fluent</option>
-									</select></td>
-								</tr>
-							</table>
-							<div id="causalStr"></div>
+							<div class="rest">
+								<table id="causalTheory">
+									<tr>
+										<th>action</th>
+										<td><input type="text" id="action"
+											onkeyup="inputRestrict(this)" onclick="getAllAction()">
+											<select class="actionSelect" onchange="autoText('action')">
+												<option value="">please select an action</option>
+										</select></td>
+									</tr>
+									<tr>
+										<th>cause</th>
+										<td><select id="cause" onchange="causeChg()">
+												<option value="">please select</option>
+												<option value="initiates">initiates</option>
+												<option value="terminates">terminates</option>
+												<option value="updates">updates</option>
+										</select></td>
+									</tr>
+									<tr id="fromto" style="display: none">
+										<th></th>
+										<td><span><input type="text" id="from"
+												onkeyup="alnumRestrict(this)"></span> <span>to</span> <span><input
+												type="text" id="to" onkeyup="alnumRestrict(this)"></span> <span>in</span>
+										</td>
+									</tr>
+									<tr>
+										<th>fluent</th>
+										<td><input type="text" id="fluent"
+											onkeyup="inputRestrict(this)"> <select
+											class="fluentSelect" onchange="autoText('fluent')">
+												<option value="">please select a fluent</option>
+										</select></td>
+									</tr>
+								</table>
+								<div id="causalStr"></div>
+							</div>
 						</div>
 						<div id="tabs-3" style="display:none">
 							<div class="tabbar">
@@ -161,10 +165,13 @@
 								<button onclick="newPrecondition()">submit</button>
 								<button onclick="delInputClause('preCondStr')">delete</button>
 							</div>
-							<p>Please input actions, fluents, and conditions which cannot happen together</p>
-							<table id="precondition">
-							</table>
-							<div id="preCondStr"></div>
+							<div class="rest">
+								<p>Please input actions, fluents, and conditions which
+									cannot happen together</p>
+								<table id="precondition">
+								</table>
+								<div id="preCondStr"></div>
+							</div>
 						</div>
 					</div>
 
@@ -175,7 +182,6 @@
 	
 	<!-- dependencies -->
     <script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
-    <script src="js/jquery.splitter.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/jquery-ui.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/lodash.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/backbone.js" type="text/javascript" charset="utf-8"></script>
@@ -229,33 +235,6 @@
 			obj.value = regex;
 		}
 	}
-	
-	$('#whole').height(630).split({
-    	orientation: 'horizontal',
-    	limit: {leftUpper: 60, rightBottom: 570},
-    	position: 60, // if there is no percentage it interpret it as pixels
-     	onDrag: function(event) {
-        	console.log(splitter.position());
-    	}
-	});
-	
-	$('#splitter_panel').height(568).split({
-    	orientation: 'vertical',
-    	limit: {leftUpper: 620, rightBottom: 620},
-    	position: '50%', // if there is no percentage it interpret it as pixels
-     	onDrag: function(event) {
-        	console.log(splitter.position());
-    	}
-	});
-	
-	$('#right_panel').height(568).split({
-    	orientation: 'horizontal',
-    	limit: {leftUpper: 283, rightBottom: 283},
-    	position: '50%', // if there is no percentage it interpret it as pixels
-     	onDrag: function(event) {
-        	console.log(splitter.position());
-    	}
-	});
 	
 	function show(id) {
 		document.getElementById("tabs-1").setAttribute("style", "display:none");

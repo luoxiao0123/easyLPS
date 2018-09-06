@@ -343,7 +343,7 @@ function getClause() {
 				alert(XMLHttpRequest.responseText);
 			},
 			success : function(data) {
-				document.getElementById('output').value = data;
+				document.getElementById('output').innerHTML = data;
 			}
 	});
 }

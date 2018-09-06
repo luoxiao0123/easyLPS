@@ -1,0 +1,44 @@
+@charset "UTF-8";
+/* Split the screen in half */
+splitter_panel {
+	width: 100%;
+	position: relative;
+	top: 0px;
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+
+#left_panel {
+	height: 100%;
+	width: 50%;
+	position: fixed;
+	z-index: 1;
+	top: 60px;
+	overflow-x: hidden;
+	padding-top: 0px;
+	left: 0;
+}
+
+#right_panel {
+	height: 100%;
+	width: 50%;
+	position: fixed;
+	z-index: 1;
+	top: 60px;
+	overflow-x: hidden;
+	overflow-y: hidden;
+	padding-top: 0px;
+	right: 0;
+}
+
+#right_up {
+	height: calc(50vh - 30px);
+	width: 100%;
+	position: relative;
+}
+
+#right_down {
+	height: calc(50vh - 30px); 
+	width: 100%;
+	position: relative;
+}

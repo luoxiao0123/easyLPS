@@ -3,9 +3,10 @@
    https://blog.csdn.net/no2015214099/article/details/73196652*/
    
 #dh {
-	position: relative;
+	position: fixed;
+	top: 60px;
 	margin-top: 0px;
-	width: 618px;
+	width: 50%;
 	height: 40px;
 	border: 0px;
 	background-color: #0099CC;
@@ -18,7 +19,7 @@
 
 #dh a {
 	color: #FFF;
-	width: 103px;
+	width: calc(50vw / 6);
 	height: 40px;
 	display: block;
 	text-decoration: none;
@@ -68,4 +69,19 @@
 
 #dh ul li:hover ul { 
 	display: block;
+}
+
+#left_input {
+	position: fixed;
+	top: 100px;
+	z-index: 0;
+}
+
+#myholder {
+	position: relative;
+	top: 70px;
+	display: block;
+	margin-left: auto;
+    margin-right: auto;
+	z-index: -1;
 }

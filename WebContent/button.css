@@ -34,3 +34,9 @@ table button {
 	background: #ddd;
     color: white;
 }
+
+.rest {
+	position: relative;
+	height: calc(50vh - 103px);
+	overflow: scroll;
+}

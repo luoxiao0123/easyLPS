@@ -10,7 +10,7 @@ function toLPS() {
 		},
 		success : function(data) {
 			var jsonData = JSON.parse(data);
-			document.getElementById('output').value = jsonData.code;
+			document.getElementById('output').innerHTML = jsonData.code;
 			global.collection.actions = jsonData.actions;
 			global.collection.fluents = jsonData.fluents;
 			global.collection.macros = jsonData.macros;
