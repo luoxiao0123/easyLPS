@@ -23,7 +23,7 @@ It is currently deployed on azure, and you can get access to it directly [here](
 * Install a new server, and run the program successfully on http://localhost:8080/easyLPS/
 
 ## User Guide
-User guide is available [here]
+User guide is available [here](https://github.com/luoxiao0123/easyLPS/blob/master/userguide.pdf)
 
 ## Notice
 All files in folder /WebContent/js and /WebContent/css are the following javascript and CSS libraries. 
